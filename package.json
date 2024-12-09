@@ -21,11 +21,24 @@
     "genai",
     "yeoman-generator"
   ],
+  "dependencies": {
+    "@eslint/js": "9.16.0",
+    "@yeoman/adapter": "2.0.0",
+    "@yeoman/conflicter": "2.3.2",
+    "@yeoman/namespace": "1.0.1",
+    "@yeoman/transform": "2.1.0",
+    "@yeoman/types": "1.5.0",
+    "chalk": "^5.3.0",
+    "yeoman-generator": "^7.3.3",
+    "yo": "^5.0.0",
+    "yosay": "^3.0.0",
+    "underscore.string": "^3.2.1"
+  },
   "devDependencies": {
-    "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-xo": "^0.46.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "eslint": "^9.16.0",
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.10",
@@ -35,12 +48,6 @@
   },
   "engines": {
     "npm": ">= 4.0.0"
-  },
-  "dependencies": {
-    "chalk": "^5.3.0",
-    "yeoman-generator": "^7.3.3",
-    "yo": "^5.0.0",
-    "yosay": "^3.0.0"
   },
   "jest": {
     "testEnvironment": "node"
