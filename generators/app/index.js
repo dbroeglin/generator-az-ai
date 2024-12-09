@@ -1,10 +1,11 @@
 'use strict';
-const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
+import Generator from "yeoman-generator";
+import chalk from "chalk";
+import yosay from "yosay";
+//import tmp from "tmp";
 
-module.exports = class extends Generator {
-  prompting() {
+export default class extends Generator {
+  async prompting() {
     // Have Yeoman greet the user.
     this.log(
       yosay(
@@ -35,6 +36,5 @@ module.exports = class extends Generator {
   }
 
   install() {
-    this.installDependencies();
   }
 };
