@@ -17,7 +17,9 @@
 		"vscode": {
 			"extensions": [
 				"EditorConfig.EditorConfig",
-				"ms-vscode.vscode-typescript-next"
+				"ms-vscode.vscode-typescript-next",
+				"GitHub.copilot",
+				"GitHub.copilot-chat"
 			]
 		}
 	},
