@@ -1,0 +1,14 @@
+name: <%= solutionSlug %>
+services:
+hooks:
+  postprovision:
+    windows:
+      shell: pwsh
+      run: $output = azd env get-values; Add-Content -Path .env -Value $output;
+      interactive: true
+      continueOnError: false
+    posix:
+      shell: sh
+      run: azd env get-values > .env
+      interactive: true
+      continueOnError: false
