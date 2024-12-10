@@ -20,7 +20,8 @@
 				"EditorConfig.EditorConfig",
 				"ms-vscode.vscode-typescript-next",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"
+				"GitHub.copilot-chat",
+				"bierner.markdown-preview-github-styles"
 			]
 		}
 	},
