@@ -5,7 +5,7 @@
 <% } -%>
 
 > [!TIP] 
-> AI GBB Typ: Document what your solution does here.
+> **AI GBB Typ**: Document what your solution does here.
 
 ## Code of Conduct
 
