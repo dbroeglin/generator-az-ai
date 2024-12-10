@@ -16,6 +16,22 @@ Then generate your new project:
 yo aigbb
 ```
 
+Local development:
+```
+npm link
+```
+
+Simple testing: 
+
+```bash
+( 
+  rm -rf /tmp/foobar; cd /tmp; yo aigbb foobar && cd foobar && \
+  AZURE_ENV_NAME=test azd up
+  read
+  azd down --purge --force
+)
+```
+
 ## Getting To Know Yeoman
 
  * Yeoman has a heart of gold.
