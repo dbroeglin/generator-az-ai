@@ -3,6 +3,7 @@ import Generator from "yeoman-generator";
 import chalk from "chalk";
 import yosay from "yosay";
 import us from "underscore.string";
+import DevContainerGenerator from "../devcontainer/index.js";
 
 //import tmp from "tmp";
 
@@ -15,6 +16,10 @@ export default class extends Generator {
       description: "Destination directory where the demo will be generated"
     });
     this.destinationRoot(this.options.destination);
+
+    this.composeWith({Generator: DevContainerGenerator.default, path: '../devcontainer/index.js'}, {
+      destination: this.options.destination
+    });
   }
 
   prompting() {
@@ -57,7 +62,8 @@ export default class extends Generator {
           {
             type: 'string',
             name: 'gitHubOrg',
-            message: 'What GitHub organization do you want to push to?'
+            message: 'What GitHub organization do you want to push to?',
+            default: this.github.username
           },
           {
             type: 'string',
@@ -66,6 +72,12 @@ export default class extends Generator {
             default: function(answers) {
               return props.solutionSlug;
             }
+          },
+          {
+            type: 'confirm',
+            name: 'withGitHubPush',
+            message: 'Do you want to create the remote repository and push to GitHub?',
+            default: false
           }
         ] : [];
       return this.prompt(prompts2).then(props => {
@@ -84,11 +96,6 @@ export default class extends Generator {
       this.props
     );
 
-    this.fs.copy(
-      this.templatePath('.devcontainer'),
-      this.destinationPath('.devcontainer')
-    );
-
     this.fs.copyTpl(
       this.templatePath('azure.yaml'),
       this.destinationPath('azure.yaml'),
@@ -105,5 +112,12 @@ export default class extends Generator {
     this.spawnSync('git', ['init'], );
     this.spawnSync("git", ["add", "."]);
     this.spawnSync("git", ["commit", "-m", "Initial commit"]);
+    if (this.props.withGitHub) {
+      if (this.props.withGitHubPush) {
+        this.spawnSync("gh", ["repo", "create",
+          `${this.props.gitHubOrg}/${this.props.gitHubRepo}`,
+          "--private", "--source=.", "--remote=origin"]);
+      }
+    }
   }
 };
