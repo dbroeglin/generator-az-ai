@@ -10,13 +10,12 @@ const prompting = async function() {
       type: "string",
       name: "solutionName",
       message: "What is the human readable name of your solution?",
-      store: true,
+      default: us.titleize(us.humanize(this.options.destination)),
     },
     {
       type: "string",
       name: "solutionDescription",
       message: "What is the description of your solution?",
-      store: true,
     },
     {
       type: "string",
@@ -28,7 +27,6 @@ const prompting = async function() {
       validate: function(input) {
         return us.slugify(input) === input;
       },
-      store: true,
     },
     {
       type: "string",
@@ -41,21 +39,18 @@ const prompting = async function() {
       name: "creatorName",
       message: "What is the name of the solution creator?",
       default: await this.git.name(),
-      store: true,
     },
     {
       type: "string",
       name: "creatorEmail",
       message: "What is the email of the solution creator?",
       default: await this.git.email(),
-      store: true,
     },
     {
       type: "confirm",
       name: "withGitHub",
       message: "Do you want to configure your project for GitHub?",
       default: true,
-      store: true,
     }
   ];
   return this.prompt(prompts).then(promptingGitHub.bind(this));
@@ -70,7 +65,6 @@ async function promptingGitHub(props) {
           name: "gitHubOrg",
           message: "What GitHub organization do you want to push to?",
           default: await this.github.username,
-          store: true,
         },
         {
           type: "string",
@@ -79,7 +73,6 @@ async function promptingGitHub(props) {
           default: function() {
             return props.solutionSlug;
           },
-          store: true,
         },
         {
           type: "confirm",
@@ -92,7 +85,7 @@ async function promptingGitHub(props) {
     : [];
   return this.prompt(prompts).then(props => {
     this.props = { ...this.props, ...props };
-    this.props.solutionPythonName = us.camelize(this.props.solutionSlug);
+    this.props.solutionPythonName = us.underscored(this.props.solutionSlug);
     this.props.gitHubRepoUrl = `https://github.com/${this.props.gitHubOrg}/${this.props.gitHubRepo}`;
   });
 };
