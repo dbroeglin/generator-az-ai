@@ -1,4 +1,5 @@
-# generator-aigbb [![NPM version][npm-image]][npm-url]
+# generator-aigbb [![npm version](https://badge.fury.io/js/generator-aigbb.svg)](https://badge.fury.io/js/generator-aigbb)
+
 > AI GBB Scaffolding Tool
 
 ## Installation
@@ -42,6 +43,3 @@ Simple testing:
 ## License
 
  © Dominique Broeglin
-
-[npm-image]: https://badge.fury.io/js/generator-aigbb.svg
-[npm-url]: https://npmjs.org/package/generator-aigbb
