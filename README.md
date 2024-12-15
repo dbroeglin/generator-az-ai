@@ -43,4 +43,5 @@ Simple testing:
 
  © Dominique Broeglin
 
+[npm-image]: https://badge.fury.io/js/generator-aigbb.svg
 [npm-url]: https://npmjs.org/package/generator-aigbb
