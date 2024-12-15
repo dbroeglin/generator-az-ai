@@ -1,4 +1,4 @@
-# generator-aigbb [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-aigbb [![NPM version][npm-image]][npm-url]
 > AI GBB Scaffolding Tool
 
 ## Installation
@@ -43,9 +43,4 @@ Simple testing:
 
  © Dominique Broeglin
 
-[npm-image]: https://badge.fury.io/js/generator-aigbb.svg
 [npm-url]: https://npmjs.org/package/generator-aigbb
-[travis-image]: https://travis-ci.com/dbroeglin/generator-aigbb.svg?branch=master
-[travis-url]: https://travis-ci.com/dbroeglin/generator-aigbb
-[daviddm-image]: https://david-dm.org/dbroeglin/generator-aigbb.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/dbroeglin/generator-aigbb
