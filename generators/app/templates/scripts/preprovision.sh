@@ -5,7 +5,7 @@ echo "Running preprovision hook..."
 
 if [ -z "$AZURE_AUTH_TENANT_ID" ]; then
     AZURE_AUTH_TENANT_ID=$(az account show --query tenantId -o tsv)
-     echo -e "\e[3;31mAZURE_AUTH_TENANT_ID not provided: Defaulting to $AZURE_AUTH_TENANT_ID\e[0m"
+     echo -e "\e[3;33mAZURE_AUTH_TENANT_ID not provided: Default to $AZURE_AUTH_TENANT_ID from AZ CLI\e[0m"
 fi
 azd env set AZURE_AUTH_TENANT_ID "$AZURE_AUTH_TENANT_ID"
 

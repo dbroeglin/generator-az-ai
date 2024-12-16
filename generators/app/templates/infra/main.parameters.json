@@ -8,6 +8,27 @@
     "location": {
       "value": "${AZURE_LOCATION}"
     },
+<% if (withFrontend || withBackend) { -%>
+    "authTenantId": {
+      "value": "${AZURE_AUTH_TENANT_ID}"
+    },
+    "authClientId": {
+      "value": "${AZURE_CLIENT_APP_ID}"
+    },
+    "authClientSecret": {
+      "value": "${AZURE_CLIENT_APP_SECRET}"
+    },
+<% } -%>
+<% if (withFrontend) { -%>
+    "frontendExists": {
+      "value": "${SERVICE_FRONTEND_RESOURCE_EXISTS=false}"
+    },
+<% } -%>
+<% if (withBackend) { -%>
+    "backendExists": {
+      "value": "${SERVICE_BACKEND_RESOURCE_EXISTS=false}"
+    },
+<% } -%>
     "azurePrincipalId": {
       "value": "${AZURE_PRINCIPAL_ID}"
     }

@@ -54,7 +54,11 @@ export default class extends Generator {
       this.props
     );
 
-    this.fs.copy(this.templatePath("infra"), this.destinationPath("infra"));
+    this.fs.copyTpl(
+      this.templatePath("infra"),
+      this.destinationPath("infra"),
+      this.props
+    );
 
     if (this.props.withFrontend) {
       this.fs.copyTpl(
@@ -63,7 +67,7 @@ export default class extends Generator {
         this.props
       );
     }
-    if (this.props.withBackend  ) {
+    if (this.props.withBackend) {
       this.fs.copyTpl(
         this.templatePath("src/backend"),
         this.destinationPath("src/backend"),

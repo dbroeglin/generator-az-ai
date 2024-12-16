@@ -27,7 +27,7 @@ Simple testing:
 ```shell
 ( 
   rm -rf /tmp/foobar; cd /tmp; yo aigbb foobar && cd foobar && \
-  AZURE_ENV_NAME=deleteme AZURE_LOCATION=francecentral azd up 
+  AZURE_ENV_NAME=delete-me AZURE_LOCATION=francecentral azd up 
   read
   azd down --purge --force
 )
