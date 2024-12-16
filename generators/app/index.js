@@ -24,7 +24,6 @@ export default class extends Generator {
 
   writing() {
     this.log(`Scaffolding repeatable IP in '${this.options.destination}'...`);
-    this.log(`Props: ${JSON.stringify(this.props)}`);
 
     this.fs.copyTpl(
       this.templatePath("README.md"),
@@ -56,6 +55,21 @@ export default class extends Generator {
     );
 
     this.fs.copy(this.templatePath("infra"), this.destinationPath("infra"));
+
+    if (this.props.withFrontend) {
+      this.fs.copyTpl(
+        this.templatePath("src/frontend"),
+        this.destinationPath("src/frontend"),
+        this.props
+      );
+    }
+    if (this.props.withBackend  ) {
+      this.fs.copyTpl(
+        this.templatePath("src/backend"),
+        this.destinationPath("src/backend"),
+        this.props
+      );
+    }
   }
 
   install() {
