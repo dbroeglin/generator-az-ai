@@ -33,6 +33,20 @@ Simple testing:
 )
 ```
 
+Testing backend authentication:
+
+```shell
+token=$(az account get-access-token \
+  --resource api://$(azd env get-value AZURE_CLIENT_APP_ID) \
+  -t $(az account show --query tenantId -o tsv) \
+  --query accessToken -o tsv)
+curl -i  $(azd env get-value SERVICE_BACKEND_URL)/echo \
+  -X GET \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $token" \
+  -d '{"Hello":"World!"}'
+```
+
 ## Getting To Know Yeoman
 
  * Yeoman has a heart of gold.
