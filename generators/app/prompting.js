@@ -1,16 +1,19 @@
 import yosay from "yosay";
 import chalk from "chalk";
 import us from "underscore.string";
+import path from "path";
 
 const prompting = async function() {
   this.log(yosay(`Welcome to the fine ${chalk.red("AI GBB")} generator!`));
+  const solutionBasename = path.basename(path.resolve(this.options.destination));
+  const solutionName = us.titleize(us.humanize(solutionBasename));
 
   const prompts = [
     {
       type: "string",
       name: "solutionName",
       message: "What is the human readable name of your solution?",
-      default: us.titleize(us.humanize(this.options.destination)),
+      default: solutionName,
     },
     {
       type: "string",
@@ -49,7 +52,19 @@ const prompting = async function() {
     {
       type: "confirm",
       name: "withGitHub",
-      message: "Do you want to configure your project for GitHub?",
+      message: "Do you want to configure your solution for GitHub?",
+      default: true,
+    },
+    {
+      type: "confirm",
+      name: "withFrontend",
+      message: "Do you want to configure your solution with a frontend?",
+      default: true,
+    },
+    {
+      type: "confirm",
+      name: "withBackend",
+      message: "Do you want to configure your solution with a backend?",
       default: true,
     }
   ];
