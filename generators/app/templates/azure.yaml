@@ -39,3 +39,15 @@ hooks:
       run: ./scripts/postprovision.sh
       interactive: true
       continueOnError: false
+  predown:
+    # windows:
+    #   shell: pwsh
+    #   run: .\scripts\predown.ps1
+    #   interactive: true
+    #   continueOnError: false
+    posix:
+      shell: sh
+      run: ./scripts/predown.sh
+      interactive: true
+      continueOnError: false
+
