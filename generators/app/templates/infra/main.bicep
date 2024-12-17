@@ -231,9 +231,10 @@ module frontendApp 'modules/app/container-apps.bicep' = {
     exists: frontendExists
     serviceName: 'frontend' // Must match the service name in azure.yaml
     env: {
+<% if (withBackend) { -%>
       // BACKEND_ENDPOINT: backendApp.outputs.URL
       BACKEND_ENDPOINT: backendApp.outputs.URL
-
+<% } -%>
       // Required for the frontend app to ask for a token for the backend app
       AZURE_CLIENT_APP_ID: authClientId
 
@@ -317,8 +318,10 @@ module backendContainerAppAuth 'modules/app/container-apps-auth.bicep' = {
     openIdIssuer: '${environment().authentication.loginEndpoint}${authTenantId}/v2.0' // Works only for Microsoft Entra
     unauthenticatedClientAction: 'Return401'
     allowedApplications:[
-      frontendIdentity.outputs.clientId
-      '04b07795-8ddb-461a-bbee-02f9e1bf7b46' // AZ CLI for testing purposes
+<% if(withFrontend) { %>
+        frontendIdentity.outputs.clientId
+<% } %>
+        '04b07795-8ddb-461a-bbee-02f9e1bf7b46' // AZ CLI for testing purposes
     ]
     allowedAudiences: [
       'api://${authClientId}'

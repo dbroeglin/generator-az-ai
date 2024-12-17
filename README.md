@@ -26,9 +26,20 @@ Simple testing:
 
 ```shell
 ( 
-  rm -rf /tmp/foobar; cd /tmp; yo aigbb foobar && cd foobar && \
+  rm -rf /tmp/foobar; yo aigbb /tmp/foobar && cd /tmp/foobar && \
   AZURE_ENV_NAME=delete-me AZURE_LOCATION=francecentral azd up 
   read
+  az ad app delete --id $(az ad app list --display-name "delete-me-app" --query '[].id'  -o tsv)
+  azd down --purge --force
+)
+```
+
+Cleanup only:
+
+```shell
+( 
+  cd /tmp/foobar && \
+  az ad app delete --id $(az ad app list --display-name "delete-me-app" --query '[].id'  -o tsv)
   azd down --purge --force
 )
 ```
