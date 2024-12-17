@@ -73,6 +73,8 @@ const prompting = async function() {
 
 async function promptingGitHub(props) {
   this.props = { ...this.props, ...props };
+
+  this.props.authorContact = `${this.props.creatorName} <${this.props.creatorEmail}>`;
   const prompts = this.props.withGitHub
     ? [
         {
