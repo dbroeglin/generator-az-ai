@@ -364,4 +364,11 @@ output SERVICE_BACKEND_URL string = backendApp.outputs.URL
 
 <% } -%>
 
+@description('ID of the tenant we are deploying to')
+output AZURE_AUTH_TENANT_ID string = authTenantId
+
+@description('Principal ID of the user runing the deployment')
 output AZURE_PRINCIPAL_ID string = azurePrincipalId
+
+@description('Application registration client ID')
+output AZURE_CLIENT_APP_ID string = authClientId
