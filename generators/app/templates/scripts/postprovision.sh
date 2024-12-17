@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # Add here commands that need to be executed after provisioning
 # Typically: loading data in databases, AI Search or storage accounts, etc.

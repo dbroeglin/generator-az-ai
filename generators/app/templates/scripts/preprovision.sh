@@ -1,7 +1,9 @@
-#!/bin/bash -x
+#!/bin/bash
 set -e
 
-echo "Running preprovision hook..."
+# Add here commands that need to be executed before provisioning
+# Typically: preparing additional environment variables, creating app registrations, etc.
+# see https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-extensibility
 
 if [ -z "$AZURE_AUTH_TENANT_ID" ]; then
     AZURE_AUTH_TENANT_ID=$(az account show --query tenantId -o tsv)
