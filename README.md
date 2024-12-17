@@ -1,10 +1,12 @@
-# generator-aigbb [![npm version](https://badge.fury.io/js/generator-aigbb.svg)](https://badge.fury.io/js/generator-aigbb)
+# AI GBB Generator [![npm version](https://badge.fury.io/js/generator-aigbb.svg)](https://badge.fury.io/js/generator-aigbb)
 
 > AI GBB Scaffolding Tool
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/dbroeglin/generator-aigbb) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/dbroeglin/generator-aigbb)
+
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-aigbb using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [Yeoman](http://yeoman.io) and `generator-aigbb` using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
@@ -12,18 +14,16 @@ npm install -g generator-aigbb
 ```
 
 Then generate your new project:
-
 ```bash
-yo aigbb
+yo aigbb awesome-ai-app
 ```
 
 Local development:
-```
+```bash
 npm link
 ```
 
 Simple testing: 
-
 ```shell
 ( 
   rm -rf /tmp/foobar; yo aigbb /tmp/foobar && cd /tmp/foobar && \
@@ -35,7 +35,6 @@ Simple testing:
 ```
 
 Cleanup only:
-
 ```shell
 ( 
   cd /tmp/foobar && \
@@ -45,7 +44,6 @@ Cleanup only:
 ```
 
 Testing backend authentication:
-
 ```shell
 token=$(az account get-access-token \
   --resource api://$(azd env get-value AZURE_CLIENT_APP_ID) \
