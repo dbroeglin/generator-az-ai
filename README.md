@@ -38,7 +38,6 @@ Cleanup only:
 ```shell
 ( 
   cd /tmp/foobar && \
-  az ad app delete --id $(az ad app list --display-name "delete-me-app" --query '[].id'  -o tsv)
   azd down --purge --force
 )
 ```
