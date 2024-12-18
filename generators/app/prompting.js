@@ -19,6 +19,7 @@ const prompting = async function() {
       type: "string",
       name: "solutionDescription",
       message: "What is the description of your solution?",
+      default: `Description of ${solutionName}`,
     },
     {
       type: "string",
