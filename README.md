@@ -55,6 +55,12 @@ curl -i  $(azd env get-value SERVICE_BACKEND_URL)/echo \
   -d '{"Hello":"World!"}'
 ```
 
+Comparing generations:
+```shell
+yo aigbb /tmp/hello-ai-world
+diff  --color -r /tmp/hello-ai-world .
+```
+
 ## Getting To Know Yeoman
 
  * Yeoman has a heart of gold.
