@@ -1,6 +1,8 @@
 "use strict";
 import Generator from "yeoman-generator";
 import prompting from "./prompting.js";
+import BackendGenerator from "../backend/index.js";
+import FrontendGenerator from "../frontend/index.js";
 
 // Import tmp from "tmp";
 
@@ -13,9 +15,26 @@ export default class extends Generator {
       description: "Destination directory where the demo will be generated"
     });
     this.destinationRoot(this.options.destination);
-
-    this.skipInstall = true
     this.props = this.options;
+
+    this.composeWith(
+      {
+        Generator: BackendGenerator,
+        path: '../backend/index.js'
+      },
+      {
+        parent: this
+      }
+    );
+    this.composeWith(
+      {
+        Generator: FrontendGenerator,
+        path: '../frontend/index.js'
+      },
+      {
+        parent: this
+      }
+    );
   }
 
   async prompting() {
@@ -23,7 +42,7 @@ export default class extends Generator {
   }
 
   writing() {
-    this.log(`Scaffolding repeatable IP in '${this.options.destination}'...`);
+    this.log(`🚀 Scaffolding repeatable IP in '${this.options.destination}'...`);
 
     this.fs.copyTpl(
       this.templatePath("README.md"),
@@ -59,24 +78,9 @@ export default class extends Generator {
       this.destinationPath("infra"),
       this.props
     );
-
-    if (this.props.withFrontend) {
-      this.fs.copyTpl(
-        this.templatePath("src/frontend"),
-        this.destinationPath("src/frontend"),
-        this.props
-      );
-    }
-    if (this.props.withBackend) {
-      this.fs.copyTpl(
-        this.templatePath("src/backend"),
-        this.destinationPath("src/backend"),
-        this.props
-      );
-    }
   }
 
-  install() {
+  end() {
     this.spawnSync("git", ["init"]);
     this.spawnSync("git", ["add", "."]);
     this.spawnSync("git", ["commit", "-m", "Initial commit"]);
@@ -96,5 +100,6 @@ export default class extends Generator {
         ]);
       }
     }
+    return false;
   }
 }

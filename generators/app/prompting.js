@@ -8,9 +8,6 @@ const prompting = async function() {
   this.log(yosay(`Welcome to the fine ${chalk.red("AI GBB")} generator!`));
   const solutionBasename = path.basename(path.resolve(this.options.destination));
   const solutionName = us.titleize(us.humanize(solutionBasename));
-
-  log(`Options: '${this.options.solutionName}'...`);
-
   const prompts = [
     {
       type: "string",
