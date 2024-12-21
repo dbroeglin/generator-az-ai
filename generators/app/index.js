@@ -4,6 +4,8 @@ import prompting from "./prompting.js";
 import BackendGenerator from "../backend/index.js";
 import FrontendGenerator from "../frontend/index.js";
 import chalk from "chalk";
+import pkg from '../../package.json' with { type: "json" };
+
 
 export default class extends Generator {
   constructor(args, opts) {
@@ -15,6 +17,7 @@ export default class extends Generator {
     });
     this.destinationRoot(this.options.destination);
     this.props = this.options;
+    this.props.generatorVersion = pkg.version;
 
     this.composeWith(
       {
@@ -81,8 +84,11 @@ export default class extends Generator {
 
   end() {
     this.spawnSync("git", ["init"]);
-    this.spawnSync("git", ["add", "."]);
-    if (this.spawnSync("git", ["status", "--porcelain"]).stdout) {
+    this.log(chalk.green("Git repository initialized."));
+    if (this.spawnSync("git", ["status", "--porcelain"], {
+      stdio: 'pipe'
+    }).stdout.length > 0) {
+      this.spawnSync("git", ["add", "."]);
       this.spawnSync("git", ["commit", "-m", "Initial commit"]);
     } else {
       this.log(chalk.yellow("No changes to commit."));
