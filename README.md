@@ -23,7 +23,7 @@ Local development:
 npm link
 ```
 
-Simple testing: 
+Simple end to end testing: 
 ```shell
 ( 
   rm -rf /tmp/foobar; yo aigbb /tmp/foobar && cd /tmp/foobar && \
@@ -57,8 +57,21 @@ curl -i  $(azd env get-value SERVICE_BACKEND_URL)/echo \
 
 Comparing generations:
 ```shell
-yo aigbb /tmp/hello-ai-world
-diff  --color -r /tmp/hello-ai-world .
+yo aigbb  ../hello-ai-world \
+  --solutionName 'Hello AI World' \
+  --solutionDescription 'AI Application chassis - best AI app practices optimized for Azure' \
+  --solutionSlug hello-ai-world \
+  --solutionVersion 0.1.0 \
+  --creatorName 'AI GBB EMEA' \
+  --creatorEmail dominique.broeglin@microsoft.com \
+  --withGitHub true \
+  --withFrontend true \
+  --withBackend true \
+  --gitHubOrg dbroeglin \
+  --gitHubRepo hello-ai-world \
+  --withGitHubPush ''
+  
+# Positive result: command should fail when there is nothing to commit
 ```
 
 ## Getting To Know Yeoman
