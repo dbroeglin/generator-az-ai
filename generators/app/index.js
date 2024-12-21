@@ -15,7 +15,7 @@ export default class extends Generator {
     this.destinationRoot(this.options.destination);
 
     this.skipInstall = true
-    this.props = {}
+    this.props = this.options;
   }
 
   async prompting() {

@@ -4,6 +4,6 @@ set -e
 # Update APT cache
 sudo apt update
 
-# Install uv and run a sync to ensure everything is setup
+# Install uv, see https://astral.sh for additional information
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync

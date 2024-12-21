@@ -1,6 +1,6 @@
-metadata name = '<%= solutionSlug %>'
-metadata description = 'Deploys the infrastructure for <%= solutionName %>'
-metadata author = '<%= authorContact %>'
+metadata name = '<%- solutionSlug %>'
+metadata description = 'Deploys the infrastructure for <%- solutionName %>'
+metadata author = '<%- authorContact %>'
 
 /* -------------------------------------------------------------------------- */
 /*                                 PARAMETERS                                 */

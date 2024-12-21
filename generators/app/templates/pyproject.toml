@@ -1,7 +1,7 @@
 [project]
-name = "<%= solutionPythonName %>"
-version = "<%= solutionVersion %>"
-description = "<%= solutionDescription %>"
+name = "<%- solutionPythonName %>"
+version = "<%- solutionVersion %>"
+description = "<%- solutionDescription %>"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

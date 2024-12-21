@@ -1,14 +1,14 @@
-# <%= solutionDescription %>
+# <%- solutionDescription %>
 
 ToC: [**USER STORY**](#user-story) \| [**GETTING STARTED**](#getting-started)  \| [**HOW IT WORKS**](#how-it-works)
 
 <% if (withGitHub) { -%>
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/<%= gitHubOrg %>/<%= gitHubRepo %>) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/<%= gitHubOrg %>/<%= gitHubRepo %>)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/<%- gitHubOrg %>/<%- gitHubRepo %>) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/<%- gitHubOrg %>/<%- gitHubRepo %>)
 <% } -%>
 
 ## User story
 
-### <%= solutionName %> overview
+### <%- solutionName %> overview
 
 > [!TIP] 
 > **AI GBB Tip**: Document what your solution does here.
@@ -33,7 +33,7 @@ Alternatively you will need:
 
 ### Quick deploy
 
-To deploy <%= solutionName %> just run: 
+To deploy <%- solutionName %> just run: 
 `azd up`
 
 ## How it works
