@@ -71,7 +71,7 @@ yo aigbb  ../hello-ai-world \
   --gitHubRepo hello-ai-world \
   --withGitHubPush ''
   
-# Positive result: command should fail when there is nothing to commit
+# Positive result: the last line in the command output should be "No changes to commit."
 ```
 
 ## Getting To Know Yeoman

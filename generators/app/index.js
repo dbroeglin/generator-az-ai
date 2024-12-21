@@ -3,8 +3,7 @@ import Generator from "yeoman-generator";
 import prompting from "./prompting.js";
 import BackendGenerator from "../backend/index.js";
 import FrontendGenerator from "../frontend/index.js";
-
-// Import tmp from "tmp";
+import chalk from "chalk";
 
 export default class extends Generator {
   constructor(args, opts) {
@@ -83,7 +82,11 @@ export default class extends Generator {
   end() {
     this.spawnSync("git", ["init"]);
     this.spawnSync("git", ["add", "."]);
-    this.spawnSync("git", ["commit", "-m", "Initial commit"]);
+    if (this.spawnSync("git", ["status", "--porcelain"]).stdout) {
+      this.spawnSync("git", ["commit", "-m", "Initial commit"]);
+    } else {
+      this.log(chalk.yellow("No changes to commit."));
+    }
     if (this.props.withGitHub) {
       if (this.props.withGitHubPush) {
         this.spawnSync("gh", [
