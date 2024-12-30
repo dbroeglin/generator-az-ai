@@ -6,6 +6,7 @@ import FrontendGenerator from "../frontend/index.js";
 import PackageGenerator from "../package/index.js";
 
 import chalk from "chalk";
+import us from "underscore.string";
 import pkg from '../../package.json' with { type: "json" };
 
 
@@ -21,36 +22,15 @@ export default class extends Generator {
     this.props = this.options;
     this.props.generatorVersion = pkg.version;
 
-    this.composeWith(
-      {
-        Generator: BackendGenerator,
-        path: '../backend/index.js'
-      },
-      {
-        parent: this,
-        ...this.options
-      }
-    );
-    this.composeWith(
-      {
-        Generator: FrontendGenerator,
-        path: '../frontend/index.js'
-      },
-      {
-        parent: this,
-        ...this.options
-      }
-    );
-    this.composeWith(
-      {
-        Generator: PackageGenerator,
-        path: '../package/index.js'
-      },
-      {
-        parent: this,
-        ...this.options
-      }
-    );
+    ["backend", "frontend", "package"].forEach((subgen) => {
+      this.composeWith(
+        {
+          Generator: eval(`${us.capitalize(subgen)}Generator`),
+          path: `../${subgen}/index.js`
+        },
+        { parent: this, ...this.options}
+      );
+    });
   }
 
   async prompting() {
