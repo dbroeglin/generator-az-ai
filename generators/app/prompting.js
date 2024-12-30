@@ -2,9 +2,8 @@ import yosay from "yosay";
 import chalk from "chalk";
 import us from "underscore.string";
 import path from "path";
-import { log } from "console";
 
-const prompting = async function() {
+const prompting = async function () {
   this.log(yosay(`Welcome to the fine ${chalk.red("AI GBB")} generator v${this.props.generatorVersion}!`));
   const solutionBasename = path.basename(path.resolve(this.options.destination));
   const solutionName = us.titleize(us.humanize(solutionBasename));
@@ -17,22 +16,38 @@ const prompting = async function() {
       when: (answers) => !this.options.hasOwnProperty("solutionName"),
     },
     {
+      type: "list",
+      name: "solutionLevel",
+      message: "What is the level of your solution?",
+      choices: [
+        {
+          name: 'Level 100',
+          value: 100,
+
+          description: 'Basic configuration to start a simple AI application',
+        },
+        {
+          name: 'Level 300',
+          value: 300,
+          description: 'Advanced scaffolding for a complex AI application (python packages, linting, coverage, etc.)',
+        }
+      ],
+      default: 100,
+      when: (answers) => !this.options.hasOwnProperty("solutionLevel"),
+    },
+    {
       type: "string",
       name: "solutionDescription",
       message: "What is the description of your solution?",
-      default: `Description of ${solutionName}`,
+      default: (answers) => `Description of ${answers.solutionName || this.props.solutionName}`,
       when: (answers) => !this.options.hasOwnProperty("solutionDescription"),
     },
     {
       type: "string",
       name: "solutionSlug",
       message: "What is the solution's slug? (KebabCase, no spaces)",
-      default: function(answers) {
-        return us.slugify(answers.solutionName);
-      },
-      validate: function(input) {
-        return us.slugify(input) === input;
-      },
+      default: (answers) => us.slugify(answers.solutionName || this.props.solutionName),
+      validate: (input) => us.slugify(input) === input,
       when: (answers) => !this.options.hasOwnProperty("solutionSlug"),
     },
     {
@@ -58,13 +73,6 @@ const prompting = async function() {
     },
     {
       type: "confirm",
-      name: "withGitHub",
-      message: "Do you want to configure your solution for GitHub?",
-      default: true,
-      when: (answers) => !this.options.hasOwnProperty("withGitHub"),
-    },
-    {
-      type: "confirm",
       name: "withFrontend",
       message: "Do you want to configure your solution with a frontend?",
       default: true,
@@ -76,9 +84,18 @@ const prompting = async function() {
       message: "Do you want to configure your solution with a backend?",
       default: true,
       when: (answers) => !this.options.hasOwnProperty("withBackend"),
-    }
+    },
+    {
+      type: "confirm",
+      name: "withGitHub",
+      message: "Do you want to configure your solution for GitHub?",
+      default: true,
+      when: (answers) => !this.options.hasOwnProperty("withGitHub"),
+    },
   ];
-  return this.prompt(prompts).then(promptingGitHub.bind(this));
+  return this.prompt(prompts).then(promptingGitHub.bind(this)).then((_) => {
+    this.props.solutionLevel = parseInt(this.props.solutionLevel);
+  });
 };
 
 async function promptingGitHub(props) {
@@ -87,31 +104,31 @@ async function promptingGitHub(props) {
   this.props.authorContact = `${this.props.creatorName} <${this.props.creatorEmail}>`;
   const prompts = this.props.withGitHub
     ? [
-        {
-          type: "string",
-          name: "gitHubOrg",
-          message: "What GitHub organization do you want to push to?",
-          default: await this.github.username,
-          when: (answers) => !this.options.hasOwnProperty("gitHubOrg"),
+      {
+        type: "string",
+        name: "gitHubOrg",
+        message: "What GitHub organization do you want to push to?",
+        default: await this.github.username,
+        when: (answers) => !this.options.hasOwnProperty("gitHubOrg"),
+      },
+      {
+        type: "string",
+        name: "gitHubRepo",
+        message: "What is the GitHub repository you want to push to?",
+        default: function () {
+          return props.solutionSlug;
         },
-        {
-          type: "string",
-          name: "gitHubRepo",
-          message: "What is the GitHub repository you want to push to?",
-          default: function() {
-            return props.solutionSlug;
-          },
-          when: (answers) => !this.options.hasOwnProperty("gitHubRepo"),
-        },
-        {
-          type: "confirm",
-          name: "withGitHubPush",
-          message:
-            "Do you want to create the remote repository and push to GitHub (requires GitHub CLI)?",
-          default: false,
-          when: (answers) => !this.options.hasOwnProperty("withGitHubPush"),
-        }
-      ]
+        when: (answers) => !this.options.hasOwnProperty("gitHubRepo"),
+      },
+      {
+        type: "confirm",
+        name: "withGitHubPush",
+        message:
+          "Do you want to create the remote repository and push to GitHub (requires GitHub CLI)?",
+        default: false,
+        when: (answers) => !this.options.hasOwnProperty("withGitHubPush"),
+      }
+    ]
     : [];
   return this.prompt(prompts).then(props => {
     this.props = { ...this.props, ...props };

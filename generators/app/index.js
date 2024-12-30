@@ -3,6 +3,8 @@ import Generator from "yeoman-generator";
 import prompting from "./prompting.js";
 import BackendGenerator from "../backend/index.js";
 import FrontendGenerator from "../frontend/index.js";
+import PackageGenerator from "../package/index.js";
+
 import chalk from "chalk";
 import pkg from '../../package.json' with { type: "json" };
 
@@ -25,7 +27,8 @@ export default class extends Generator {
         path: '../backend/index.js'
       },
       {
-        parent: this
+        parent: this,
+        ...this.options
       }
     );
     this.composeWith(
@@ -34,7 +37,18 @@ export default class extends Generator {
         path: '../frontend/index.js'
       },
       {
-        parent: this
+        parent: this,
+        ...this.options
+      }
+    );
+    this.composeWith(
+      {
+        Generator: PackageGenerator,
+        path: '../package/index.js'
+      },
+      {
+        parent: this,
+        ...this.options
       }
     );
   }
@@ -57,11 +71,13 @@ export default class extends Generator {
       this.destinationPath(".devcontainer")
     );
 
-    this.fs.copyTpl(
-      this.templatePath("pyproject.toml"),
-      this.destinationPath("pyproject.toml"),
-      this.props
-    )
+    if (this.props.solutionLevel >= 300) {
+      this.fs.copyTpl(
+        this.templatePath("pyproject.toml"),
+        this.destinationPath("pyproject.toml"),
+        this.props
+      )
+    }
 
     this.fs.copyTpl(
       this.templatePath("azure.yaml"),

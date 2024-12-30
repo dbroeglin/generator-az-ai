@@ -19,6 +19,8 @@ export default class extends Generator {
 
   writing() {
     if (this.props.withFrontend) {
+      this.log(`🎨 Creating frontend...`);
+
       this.fs.copyTpl(
         this.templatePath("src/frontend"),
         this.destinationPath("src/frontend"),

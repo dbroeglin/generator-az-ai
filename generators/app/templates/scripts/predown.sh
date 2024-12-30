@@ -6,10 +6,10 @@ set -e
 # see https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-extensibility
 
 AZURE_APP_ID=$(
-  az ad app list \
-    --app-id "$AZURE_CLIENT_APP_ID" \
+  az ad app show \
+    --id "${AZURE_CLIENT_APP_ID:-00000000-0000-0000-0000-000000000000}" \
     --query '[].id' \
-    -o tsv)
+    -o tsv 2> /dev/null || true)
 
 if [ ! -z "$AZURE_APP_ID" ]; then
   echo "Deleting app $AZURE_CLIENT_APP_ID..."

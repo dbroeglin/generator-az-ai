@@ -52,14 +52,15 @@ then
         --id "$AZURE_CLIENT_APP_ID" \
         --owner-object-id "$CURRENT_USER_ID"
 
-    AZURE_CLIENT_APP_SECRET=$(
+    AZURE_CLIENT_APP_SECRET="$(
         az ad app credential reset \
             --id $AZURE_CLIENT_APP_ID \
             --display-name "client-secret" \
             --query password \
             --years 1 \
             --output tsv
-    )
+    )"
+
 
     az rest \
         --method PATCH \

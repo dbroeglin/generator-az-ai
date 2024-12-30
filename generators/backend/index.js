@@ -20,6 +20,7 @@ export default class extends Generator {
 
   writing() {
     if (this.props.withBackend) {
+      this.log(`🛠️ Creating backend...`);
       this.fs.copyTpl(
         this.templatePath("src/backend"),
         this.destinationPath("src/backend"),

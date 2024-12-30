@@ -59,6 +59,7 @@ Comparing generations:
 ```shell
 yo aigbb  ../hello-ai-world \
   --solutionName 'Hello AI World' \
+  --solutionLevel 100 \
   --solutionDescription 'AI Application chassis - best AI app practices optimized for Azure' \
   --solutionSlug hello-ai-world \
   --solutionVersion 0.1.0 \
@@ -70,6 +71,27 @@ yo aigbb  ../hello-ai-world \
   --gitHubOrg dbroeglin \
   --gitHubRepo hello-ai-world \
   --withGitHubPush ''
+
+# Positive result: the last line in the command output should be "No changes to commit."
+```
+
+```shell
+yo aigbb  ../aigbb-scaffolding-test \
+  --solutionName 'AI GBB scaffolding tool' \
+  --solutionLevel 300 \
+  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool (l300)' \
+  --solutionSlug aigbb-scaffolding-test \
+  --solutionVersion 0.1.0 \
+  --creatorName 'Dominique Broeglin' \
+  --creatorEmail dominique.broeglin@microsoft.com \
+  --withGitHub true \
+  --withFrontend true \
+  --withBackend true \
+  --gitHubOrg dbroeglin \
+  --gitHubRepo aigbb-scaffolding-test \
+  --withGitHubPush '' \
+  --withPackage true \
+  --packageSlug 'aigbb-scaffolding-test-core'
   
 # Positive result: the last line in the command output should be "No changes to commit."
 ```

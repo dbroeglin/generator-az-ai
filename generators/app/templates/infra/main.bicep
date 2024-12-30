@@ -91,7 +91,7 @@ var alphaNumericEnvironmentName = replace(replace(environmentName, '-', ''), ' '
 var tags = union(
   {
     'azd-env-name': environmentName
-    solution: 'moneta-agentic-gbb-ai-1.0'
+    solution: '<%= solutionSlug %>'
   },
   extraTags
 )

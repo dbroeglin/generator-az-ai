@@ -1,0 +1,26 @@
+[project]
+name = "<%= packageSlug %>"
+version = "<%= solutionVersion %>"
+description = "Python package for <%= solutionDescription %>"
+readme = "README.md"
+authors = [
+    { name = "<%= creatorName %>", email = "<%= creatorEmail %>" },
+]
+requires-python = ">=3.12"
+dependencies = [
+    "azure-ai-evaluation>=1.1.0",
+    "azure-ai-inference>=1.0.0b6",
+]
+
+# [project.scripts]
+# <%= packageSlug %> = "<%= packagePythonName %>:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+]
