@@ -76,22 +76,42 @@ yo aigbb  ../hello-ai-world \
 ```
 
 ```shell
-yo aigbb  ../aigbb-scaffolding-test \
-  --solutionName 'AI GBB scaffolding tool' \
-  --solutionLevel 300 \
-  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool (l300)' \
-  --solutionSlug aigbb-scaffolding-test \
+yo aigbb  ../aigbb-scaffolding-test-l100 \
+  --solutionName 'AI GBB scaffolding tool test' \
+  --solutionLevel 100 \
+  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool test (l300)' \
+  --solutionSlug aigbb-scaffolding-test-l100 \
   --solutionVersion 0.1.0 \
   --creatorName 'Dominique Broeglin' \
   --creatorEmail dominique.broeglin@microsoft.com \
-  --withGitHub true \
   --withFrontend true \
   --withBackend true \
+  --withGitHub true \
   --gitHubOrg dbroeglin \
-  --gitHubRepo aigbb-scaffolding-test \
-  --withGitHubPush '' \
+  --gitHubRepo aigbb-scaffolding-test-l100 \
+  --withGitHubPush false
+  
+# Positive result: the last line in the command output should be "No changes to commit."
+
+yo aigbb  ../aigbb-scaffolding-test-l300 \
+  --solutionName 'AI GBB scaffolding tool test' \
+  --solutionLevel 300 \
+  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool test (l300)' \
+  --solutionSlug aigbb-scaffolding-test-l300 \
+  --solutionVersion 0.1.0 \
+  --creatorName 'Dominique Broeglin' \
+  --creatorEmail dominique.broeglin@microsoft.com \
+  --withFrontend true \
+  --withBackend true \
   --withPackage true \
-  --packageSlug 'aigbb-scaffolding-test-core'
+  --packageName 'AI GBB Scaffolding Core' \
+  --packageDescription 'AI GBB Scaffolding Test Core Package' \
+  --packageSlug 'aigbb-scaffolding-core' \
+  --withGitHub true \
+  --gitHubOrg dbroeglin \
+  --gitHubRepo aigbb-scaffolding-test-l300 \
+  --withGitHubPush false
+
   
 # Positive result: the last line in the command output should be "No changes to commit."
 ```

@@ -4,11 +4,11 @@ import prompting from "./prompting.js";
 import BackendGenerator from "../backend/index.js";
 import FrontendGenerator from "../frontend/index.js";
 import PackageGenerator from "../package/index.js";
+import GitHubGenerator from "../git-hub/index.js";
 
 import chalk from "chalk";
 import us from "underscore.string";
 import pkg from '../../package.json' with { type: "json" };
-
 
 export default class extends Generator {
   constructor(args, opts) {
@@ -22,13 +22,19 @@ export default class extends Generator {
     this.props = this.options;
     this.props.generatorVersion = pkg.version;
 
-    ["backend", "frontend", "package"].forEach((subgen) => {
+    [
+      BackendGenerator,
+      FrontendGenerator,
+      PackageGenerator,
+      GitHubGenerator,
+    ].forEach((subgen) => {
+      if (subgen.name === 'default') {
+        throw new Error('Make sure you named your subgenerator class.');
+      }
+      const moduleName = us.dasherize(us.decapitalize(subgen.name.replace('Generator', '')))
       this.composeWith(
-        {
-          Generator: eval(`${us.capitalize(subgen)}Generator`),
-          path: `../${subgen}/index.js`
-        },
-        { parent: this, ...this.options}
+        { Generator: subgen, path: `../${moduleName}/index.js` },
+        { parent: this, ...this.options }
       );
     });
   }
@@ -38,7 +44,7 @@ export default class extends Generator {
   }
 
   writing() {
-    this.log(`🚀 Scaffolding repeatable IP in '${this.options.destination}'...`);
+    this.log(`🚀 Scaffolding solution in '${this.options.destination}'...`);
 
     this.fs.copyTpl(
       this.templatePath("README.md"),
@@ -76,35 +82,12 @@ export default class extends Generator {
       this.destinationPath("infra"),
       this.props
     );
+
+    return false;
   }
 
   end() {
-    this.spawnSync("git", ["init"]);
-    this.log(chalk.green("Git repository initialized."));
-    if (this.spawnSync("git", ["status", "--porcelain"], {
-      stdio: 'pipe'
-    }).stdout.length > 0) {
-      this.spawnSync("git", ["add", "."]);
-      this.spawnSync("git", ["commit", "-m", "Initial commit"]);
-    } else {
-      this.log(chalk.yellow("No changes to commit."));
-    }
-    if (this.props.withGitHub) {
-      if (this.props.withGitHubPush) {
-        this.spawnSync("gh", [
-          "repo",
-          "create",
-          `${this.props.gitHubOrg}/${this.props.gitHubRepo}`,
-          "--private",
-          "--source=.",
-          "--remote=origin",
-          "--push",
-          "--description",
-          `${this.props.solutionName} - ${this.props.solutionDescription}`,
-          "--homepage", this.props.gitHubRepoUrl
-        ]);
-      }
-    }
-    return false;
+    this.log(chalk.green(`🎉 '${this.props.solutionName}' has been successfully scaffolded in  '${this.options.destination}'.`));
   }
 }
+

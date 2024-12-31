@@ -1,16 +1,25 @@
 "use strict";
 import Generator from "yeoman-generator";
 
-export default class extends Generator {
+export default class FrontendGenerator extends Generator {
   async prompting() {
-    const { parent } = this.options;
+    this.parent = this.options.parent;
+    this.props = this.parent.props;
     const prompts = [
+      {
+        type: "confirm",
+        name: "withFrontend",
+        message: "Do you want to configure your solution with a frontend?",
+        default: true,
+        when: (answers) => !this.options.hasOwnProperty("withFrontend"),
+      },
     ];
 
-    this.parent = parent;
+    return this.prompt(prompts).then(answers => {
+      this.parent.props = { ...this.parent.props, ...answers };
+      this.parent.props.withFrontend = ((answers.withFrontend || this.parent.props.withFrontend) + '').toLowerCase() === 'true'
 
-    return this.prompt(prompts).then(props => {
-      parent.props = { ...parent.props, ...props };    })
+    });
   }
 
   default() {
@@ -18,14 +27,15 @@ export default class extends Generator {
   }
 
   writing() {
-    if (this.props.withFrontend) {
-      this.log(`🎨 Creating frontend...`);
-
-      this.fs.copyTpl(
-        this.templatePath("src/frontend"),
-        this.destinationPath("src/frontend"),
-        this.props
-      );
+    if (!this.props.withFrontend) {
+      return;
     }
+    this.log(`🎨 Creating frontend...`);
+
+    this.fs.copyTpl(
+      this.templatePath("src/frontend"),
+      this.destinationPath("src/frontend"),
+      this.props
+    );
   }
 };

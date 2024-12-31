@@ -71,69 +71,13 @@ const prompting = async function () {
       default: await this.git.email(),
       when: (answers) => !this.options.hasOwnProperty("creatorEmail"),
     },
-    {
-      type: "confirm",
-      name: "withFrontend",
-      message: "Do you want to configure your solution with a frontend?",
-      default: true,
-      when: (answers) => !this.options.hasOwnProperty("withFrontend"),
-    },
-    {
-      type: "confirm",
-      name: "withBackend",
-      message: "Do you want to configure your solution with a backend?",
-      default: true,
-      when: (answers) => !this.options.hasOwnProperty("withBackend"),
-    },
-    {
-      type: "confirm",
-      name: "withGitHub",
-      message: "Do you want to configure your solution for GitHub?",
-      default: true,
-      when: (answers) => !this.options.hasOwnProperty("withGitHub"),
-    },
   ];
-  return this.prompt(prompts).then(promptingGitHub.bind(this)).then((_) => {
-    this.props.solutionLevel = parseInt(this.props.solutionLevel);
-  });
-};
 
-async function promptingGitHub(props) {
-  this.props = { ...this.props, ...props };
-
-  this.props.authorContact = `${this.props.creatorName} <${this.props.creatorEmail}>`;
-  const prompts = this.props.withGitHub
-    ? [
-      {
-        type: "string",
-        name: "gitHubOrg",
-        message: "What GitHub organization do you want to push to?",
-        default: await this.github.username,
-        when: (answers) => !this.options.hasOwnProperty("gitHubOrg"),
-      },
-      {
-        type: "string",
-        name: "gitHubRepo",
-        message: "What is the GitHub repository you want to push to?",
-        default: function () {
-          return props.solutionSlug;
-        },
-        when: (answers) => !this.options.hasOwnProperty("gitHubRepo"),
-      },
-      {
-        type: "confirm",
-        name: "withGitHubPush",
-        message:
-          "Do you want to create the remote repository and push to GitHub (requires GitHub CLI)?",
-        default: false,
-        when: (answers) => !this.options.hasOwnProperty("withGitHubPush"),
-      }
-    ]
-    : [];
-  return this.prompt(prompts).then(props => {
-    this.props = { ...this.props, ...props };
+  return this.prompt(prompts).then(answers => {
+    this.props = { ...this.props, ...answers };
+    this.props.authorContact = `${this.props.creatorName} <${this.props.creatorEmail}>`;
     this.props.solutionPythonName = us.underscored(this.props.solutionSlug);
-    this.props.gitHubRepoUrl = `https://github.com/${this.props.gitHubOrg}/${this.props.gitHubRepo}`;
+    this.props.solutionLevel = parseInt(this.props.solutionLevel);
   });
 };
 
