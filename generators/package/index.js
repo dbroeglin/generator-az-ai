@@ -40,7 +40,7 @@ export default class PackageGenerator extends Generator {
           {
             type: "string",
             name: "packageSlug",
-            message: "What is your package's slug?",
+            message: "What is the slug of your package?",
             default: (answers) => us.slugify(answers.packageName || this.props.packageName),
             validate: (input) => us.slugify(input) === input,
             when: (answers) => !this.options.hasOwnProperty("packageSlug"),

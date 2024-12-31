@@ -8,16 +8,13 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "pexpect>=4.9.0",
     "pytest>=8.3.4",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q -p pytest_pexpect"
+addopts = "-ra"
 testpaths = [
     "tests",
 ]

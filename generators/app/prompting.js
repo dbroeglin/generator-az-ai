@@ -45,7 +45,7 @@ const prompting = async function () {
     {
       type: "string",
       name: "solutionSlug",
-      message: "What is the solution's slug? (KebabCase, no spaces)",
+      message: "What is the slug of your solution? (KebabCase, no spaces)",
       default: (answers) => us.slugify(answers.solutionName || this.props.solutionName),
       validate: (input) => us.slugify(input) === input,
       when: (answers) => !this.options.hasOwnProperty("solutionSlug"),

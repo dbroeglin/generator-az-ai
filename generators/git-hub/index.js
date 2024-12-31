@@ -41,7 +41,7 @@ export default class GitHubGenerator extends Generator {
           type: "confirm",
           name: "withGitHubPush",
           message:
-            "Do you want to create the remote repository and push to GitHub (requires GitHub CLI)?",
+            "Create the remote GitHub repository and push with GitHub CLI?",
           default: false,
           when: (answers) => !this.options.hasOwnProperty("withGitHubPush"),
         }
