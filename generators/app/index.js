@@ -21,6 +21,7 @@ export default class extends Generator {
     this.destinationRoot(this.options.destination);
     this.props = this.options;
     this.props.generatorVersion = pkg.version;
+    this.props.pythonVersion = '3.12';
 
     [
       BackendGenerator,
@@ -53,16 +54,27 @@ export default class extends Generator {
     );
 
     this.fs.copy(
+      this.templatePath("TIPS_AND_TRICKS.md"),
+      this.destinationPath("TIPS_AND_TRICKS.md")
+    );
+
+    this.fs.copy(
       this.templatePath(".devcontainer"),
       this.destinationPath(".devcontainer")
     );
 
     if (this.props.solutionLevel >= 300) {
+      // only create UV workspaces if solution level is 300 or higher
       this.fs.copyTpl(
         this.templatePath("pyproject.toml"),
         this.destinationPath("pyproject.toml"),
         this.props
       )
+
+      this.fs.write(
+        this.destinationPath(".python-version"),
+        this.props.pythonVersion
+      );
     }
 
     this.fs.copyTpl(

@@ -37,5 +37,21 @@ export default class FrontendGenerator extends Generator {
       this.destinationPath("src/frontend"),
       this.props
     );
+
+    this.fs.write(
+      this.destinationPath("src/frontend/.python-version"),
+      this.props.pythonVersion
+    );
+  }
+
+  end() {
+    if (!this.props.withFrontend) {
+      return;
+    }
+    this.log(`Executing 'uv sync' in 'src/fronted'...`);
+
+    this.spawnSync("uv", ["sync"], {
+      cwd: this.destinationPath('src/frontend'),
+    });
   }
 };

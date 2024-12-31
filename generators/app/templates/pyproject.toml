@@ -3,9 +3,22 @@ name = "<%- solutionPythonName %>"
 version = "<%- solutionVersion %>"
 description = "<%- solutionDescription %>"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=<%- pythonVersion %>"
 dependencies = [
     "python-dotenv >=1.0.1,<1.2.0",
     "ipykernel >=6.29.5,<7.0.0",
     "ipywidgets >=8.1.5,<9.0.0",
 ]
+
+<% if (solutionLevel >= 300) { -%>
+[tool.uv.workspace]
+members = ["src/backend", "src/frontend"<%- withPackage ? `, "src/${packageSlug}"` : ''  %>]
+
+[tool.uv.sources]
+<%= packageSlug %> = { workspace = true }
+
+[tool.pytest.ini_options]
+#addopts = "-ra --cov"
+addopts = "-ra"
+pythonpath = ["src"]
+<% } -%>

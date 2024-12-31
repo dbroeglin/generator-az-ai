@@ -64,15 +64,21 @@ export default class PackageGenerator extends Generator {
     }
     this.log(`📦 Creating package ${this.props.packageName} (${this.props.packageSlug})...`);
     this.fs.copyTpl(
-      this.templatePath("src/package_slug/pyproject.toml"),
-      this.destinationPath(`src/${this.props.packageSlug}/pyproject.toml`),
-      this.props
-    );
-    this.fs.copyTpl(
       this.templatePath("src/package_slug/README.md"),
       this.destinationPath(`src/${this.props.packageSlug}/README.md`),
       this.props
     );
+
+    this.fs.copyTpl(
+      this.templatePath("src/package_slug/pyproject.toml"),
+      this.destinationPath(`src/${this.props.packageSlug}/pyproject.toml`),
+      this.props
+    );
+    this.fs.write(
+      this.destinationPath(`src/${this.props.packageSlug}/.python-version`),
+      this.props.pythonVersion
+    );
+
     this.fs.copyTpl(
       this.templatePath("src/package_slug/src/package_name/__init__.py"),
       this.destinationPath(`src/${this.props.packageSlug}/src/${this.props.packagePythonName}/__init__.py`),
@@ -83,6 +89,16 @@ export default class PackageGenerator extends Generator {
       this.destinationPath(`src/${this.props.packageSlug}/tests/test_hello.py`),
       this.props
     );
+  }
 
+  end() {
+    if (!this.props.withPackage) {
+      return;
+    }
+    this.log(`Executing 'uv run pytest' in 'src/${this.props.packageSlug}'...`);
+
+    this.spawnSync("uv", ["run", "pytest"], {
+      cwd: this.destinationPath(`src/${this.props.packageSlug}`),
+    });
   }
 };

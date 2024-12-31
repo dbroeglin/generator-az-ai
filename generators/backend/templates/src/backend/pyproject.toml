@@ -1,0 +1,14 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "<%- solutionDescription %> - Backend"
+readme = "README.md"
+requires-python = ">=<%- pythonVersion %>"
+dependencies = [
+    "fastapi ~=0.115.6",
+    "uvicorn ~=0.32.1",
+    "python-dotenv ~=1.0.1",
+<% if (withPackage) { -%>
+    "<%- packageSlug %>",
+<% } -%>
+]

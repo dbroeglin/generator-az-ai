@@ -36,5 +36,20 @@ export default class BackendGenerator extends Generator {
       this.destinationPath("src/backend"),
       this.props
     );
+    this.fs.write(
+      this.destinationPath(`src/backend/.python-version`),
+      this.props.pythonVersion
+    );
+  }
+
+  end() {
+    if (!this.props.withBackend) {
+      return;
+    }
+    this.log(`Executing 'uv sync' in 'src/backend'...`);
+
+    this.spawnSync("uv", ["sync"], {
+      cwd: this.destinationPath('src/backend'),
+    });
   }
 };
