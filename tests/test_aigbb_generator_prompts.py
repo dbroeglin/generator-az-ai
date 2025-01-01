@@ -5,12 +5,10 @@ import sys
 import os
 import shutil as shutils
 
-
 @pytest.fixture(scope="function")
 def solution_dir(tmp_path_factory):
     dir = tmp_path_factory.mktemp("base") / "test-solution"
-    os.mkdir(dir)
-    yield dir
+    yield dir.resolve()
     shutils.rmtree(dir)
 
 def expect_prompt(child, prompt, default, control=None, answer=None):
@@ -24,8 +22,8 @@ def expect_prompt(child, prompt, default, control=None, answer=None):
   else:
     child.sendline()
 
-def test_l100(solution_dir):
-  child = pexpect.spawn("yo aigbb " + str(solution_dir), timeout=20, encoding="utf-8", codec_errors="replace")
+def test_prompts_l100(solution_dir):
+  child = pexpect.spawn(f"yo aigbb '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
   assert child.isalive()
 
   expect_prompt(child, "What is the human readable name of your solution?", "Test Solution")
@@ -41,16 +39,16 @@ def test_l100(solution_dir):
   expect_prompt(child, "What GitHub organization do you want to push to?", "[A-Za-z0-9-]+")
   expect_prompt(child, "What is the GitHub repository you want to push to?", "[A-Za-z0-9-]+")
   expect_prompt(child, "Create the remote GitHub repository and push with GitHub CLI?", "y/N")
-  assert child.isalive()
+  child.expect("Test Solution' has been successfully scaffolded in")
+  child.expect("Git repository initialized")
   child.expect(pexpect.EOF)
   output = child.after
   child.close()
   assert child.exitstatus == 0
 
 
-def test_l300(solution_dir):
-
-  child = pexpect.spawn("yo aigbb " + str(solution_dir), timeout=10, encoding="utf-8", codec_errors="replace")
+def test_prompts_l300(solution_dir):
+  child = pexpect.spawn(f"yo aigbb '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
   assert child.isalive()
 
   expect_prompt(child, "What is the human readable name of your solution?", "Test Solution")
@@ -70,10 +68,10 @@ def test_l300(solution_dir):
   expect_prompt(child, "What GitHub organization do you want to push to?", "[A-Za-z0-9-]+")
   expect_prompt(child, "What is the GitHub repository you want to push to?", "[A-Za-z0-9-]+")
   expect_prompt(child, "Create the remote GitHub repository and push with GitHub CLI?", "y/N")
-  assert child.isalive()
+  child.expect("Test Solution' has been successfully scaffolded in")
+  child.expect("Git repository initialized")
   child.expect(pexpect.EOF)
   output = child.after
   child.close()
   assert child.exitstatus == 0
-
 
