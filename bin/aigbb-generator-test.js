@@ -27,7 +27,7 @@ const l100Answers = {
   withBackend: true,
   withGitHub: true,
   gitHubOrg: 'dbroeglin',
-  gitHubRepo: `aigbb-scaffolding-test-l${level}`,
+  gitHubRepo: `aigbb-scaffolding-l${level}-test`,
   withGitHubPush: '' + push
 }
 const l300Answers = {
