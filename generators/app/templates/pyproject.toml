@@ -1,3 +1,5 @@
+# Main pyproject.toml file for the project
+# See https://docs.astral.sh/uv/concepts/projects/layout/ for more information
 [project]
 name = "<%- solutionPythonName %>"
 version = "<%- solutionVersion %>"
@@ -12,7 +14,8 @@ dependencies = [
 
 <% if (solutionLevel >= 300) { -%>
 [tool.uv.workspace]
-members = ["src/backend", "src/frontend"<%- withPackage ? `, "src/${packageSlug}"` : ''  %>]
+members = ["src/*"]
+# exclude = ["src/excluded-package"]
 
 [tool.uv.sources]
 <%= packageSlug %> = { workspace = true }
