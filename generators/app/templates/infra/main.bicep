@@ -190,6 +190,7 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.11.0' = {
     tags: tags
     name: _keyVaultName
     enableRbacAuthorization: true
+    enablePurgeProtection: false // enable in production to prevent accidental deletion
     roleAssignments: [
 <% if (withFrontend) { -%>
       {
@@ -222,6 +223,23 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.11.0' = {
 
 <% if (withFrontend) { -%>
 /* ------------------------------ Frontend App ------------------------------ */
+module frontendIdentity './modules/app/identity.bicep' = {
+  name: 'frontendIdentity'
+  scope: resourceGroup()
+  params: {
+    location: location
+    identityName: _frontendIdentityName
+  }
+}
+
+var keyvaultIdentities = authClientSecret != ''
+  ? {
+      'microsoft-provider-authentication-secret': {
+        keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
+        identity: frontendIdentity.outputs.identityId
+      }
+    }
+  : {}
 
 module frontendApp 'modules/app/container-apps.bicep' = {
   name: 'frontend-container-app'
@@ -248,16 +266,11 @@ module frontendApp 'modules/app/container-apps.bicep' = {
       // Required for managed identity
       AZURE_CLIENT_ID: frontendIdentity.outputs.clientId
     }
-    keyvaultIdentities: {
-      'microsoft-provider-authentication-secret': {
-        keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
-        identity: frontendIdentity.outputs.identityId
-      }
-    }
+    keyvaultIdentities: keyvaultIdentities
   }
 }
 
-module frontendContainerAppAuth 'modules/app/container-apps-auth.bicep' = {
+module frontendContainerAppAuth 'modules/app/container-apps-auth.bicep' = if (authClientSecret != '') {
   name: 'frontend-container-app-auth-module'
   params: {
     name: frontendApp.outputs.name
@@ -270,20 +283,18 @@ module frontendContainerAppAuth 'modules/app/container-apps-auth.bicep' = {
     ]
   }
 }
-
-module frontendIdentity './modules/app/identity.bicep' = {
-  name: 'frontendIdentity'
-  scope: resourceGroup()
-  params: {
-    location: location
-    identityName: _frontendIdentityName
-  }
-}
 <% } -%>
-
 
 <% if (withBackend) { -%>
 /* ------------------------------ Backend App ------------------------------- */
+module backendIdentity './modules/app/identity.bicep' = {
+  name: 'backendIdentity'
+  scope: resourceGroup()
+  params: {
+    location: location
+    identityName: _backendIdentityName
+  }
+}
 
 module backendApp 'modules/app/container-apps.bicep' = {
   name: 'backend-container-app'
@@ -296,7 +307,12 @@ module backendApp 'modules/app/container-apps.bicep' = {
     containerRegistryName: containerRegistry.outputs.name
     exists: backendExists
     serviceName: 'backend' // Must match the service name in azure.yaml
+<% if (solutionLevel == 100) { -%>
+    externalIngressAllowed: false // Set to true if you intend to call backend from the locallly deployed frontend
+                                  // Setting to true will allow traffic from anywhere
+<% } else { -%>
     externalIngressAllowed: true
+<% } -%>
     env: {
       // Required for container app daprAI
       APPLICATIONINSIGHTS_CONNECTION_STRING: appInsights.properties.ConnectionString
@@ -304,15 +320,17 @@ module backendApp 'modules/app/container-apps.bicep' = {
       // Required for managed identity
       AZURE_CLIENT_ID: backendIdentity.outputs.clientId
     }
+<% if (solutionLevel > 100) { -%>}
     keyvaultIdentities: {
       'microsoft-provider-authentication-secret': {
         keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
         identity: backendIdentity.outputs.identityId
       }
     }
+<% } -%>
   }
 }
-
+<% if (solutionLevel > 100) { -%>
 module backendContainerAppAuth 'modules/app/container-apps-auth.bicep' = {
   name: 'backend-container-app-auth-module'
   params: {
@@ -333,14 +351,7 @@ module backendContainerAppAuth 'modules/app/container-apps-auth.bicep' = {
   }
 }
 
-module backendIdentity './modules/app/identity.bicep' = {
-  name: 'backendIdentity'
-  scope: resourceGroup()
-  params: {
-    location: location
-    identityName: _backendIdentityName
-  }
-}
+<% } -%>
 <% } -%>
 
 /* -------------------------------------------------------------------------- */

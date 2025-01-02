@@ -2,29 +2,36 @@
 
 ToC: [**USER STORY**](#user-story) \| [**GETTING STARTED**](#getting-started)  \| [**HOW IT WORKS**](#how-it-works)
 
-<% if (withGitHub) { -%>
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/<%- gitHubOrg %>/<%- gitHubRepo %>) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/<%- gitHubOrg %>/<%- gitHubRepo %>)
-<% } -%>
-
 ## User story
 
 ### <%- solutionName %> overview
 
+<% if (solutionLevel == 100) { -%>
+L100 level aplication stub for an AI copilot/agent.
+<% } else { -%>
 > [!TIP] 
 > **AI GBB Tip**: Document what your solution does here.
+<% } -%>
 
 ## Getting Started
 
-### Prerequisites
+### Codespaces and DevContainers
 
-Ideally, open this repository in a Codespace on GitHub or in a DevContainer.
+This respository has been configured to support GitHub Codespace and DevContainers.
 
-Alternatively you will need: 
+<% if (withGitHub) { -%>
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/<%- gitHubOrg %>/<%- gitHubRepo %>) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/<%- gitHubOrg %>/<%- gitHubRepo %>)
+<% } -%>
+
+### Local
+
+It is possible to operate the fully local setup.
+
   - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli): `az`
   - [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview): `azd`
-  - [Docker](https://www.docker.com/get-started/): `docker`
   - [Python](https://www.python.org/about/gettingstarted/): `python`
   - [UV](https://docs.astral.sh/uv/getting-started/installation/): `uv`
+  - Optionally [Docker](https://www.docker.com/get-started/): `docker` 
 
 > [!TIP] 
 > **AI GBB Tip**: Document here how to quickly deploy the solution. Try to reduce this to `azd up` by
@@ -36,17 +43,25 @@ Alternatively you will need:
 To deploy <%- solutionName %> just run: 
 `azd up`
 
+> **WARNING** The application automatically configures authentication to secure frontend
+> To do so it creates an app registration in EntraID. 
+> If the account you are using to deploy the app does not have the required permissions, disable the preprovision script in azure.yaml
+
 ## How it works
+
+- TODO: How to run backend locally
+- TODO: How to run frontend locally
 
 ### User Manual
 
+- TODO : Obervability
 > [!TIP] 
 > **AI GBB Tip**: Document how the solution is used and operated here.
 > Optionally, if the section is too long, create a `USER_MANUAL.md` file and
 > link to it from here.
 
 ### Architecture
-
+<% if (solutionLevel >= 300) { -%>
 > [!TIP] 
 > **AI GBB Tip**: Document the solution's architecture here.
 > Optionally, if the section is too long, create a `ARCHITECTURE.md` file and
@@ -55,7 +70,7 @@ To deploy <%- solutionName %> just run:
 > [!TIP] 
 > **AI GBB Tip**: For architecture diagrams, you can leverage the [Markdown text
 > diagramming capabilities](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams) available in GitHub. See example below.
-
+<% } %>
 ```mermaid
 architecture-beta
     group solution(cloud)[Solution]

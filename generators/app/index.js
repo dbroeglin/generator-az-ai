@@ -58,9 +58,10 @@ export default class extends Generator {
       this.destinationPath("TIPS_AND_TRICKS.md")
     );
 
-    this.fs.copy(
+    this.fs.copyTpl(
       this.templatePath(".devcontainer"),
-      this.destinationPath(".devcontainer")
+      this.destinationPath(".devcontainer"),
+      this.props
     );
 
     if (this.props.solutionLevel >= 300) {

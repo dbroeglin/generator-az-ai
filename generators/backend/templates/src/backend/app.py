@@ -13,7 +13,7 @@ def load_dotenv_from_azd():
         logging.info(f"Found AZD environment. Loading...")
         load_dotenv(stream=StringIO(result.stdout))
     else:
-        logging.info(f"AZD environment not found. Loading from .env file...")
+        logging.info(f"AZD environment not found. Trying to load from .env file...")
         load_dotenv()
 
 load_dotenv_from_azd()

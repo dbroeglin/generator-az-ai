@@ -1,3 +1,4 @@
+# see https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-schema
 name: <%- solutionSlug %>
 services:
 <% if (withBackend) { -%>
@@ -7,6 +8,7 @@ services:
     host: containerapp
     docker:
       path: ./Dockerfile
+      remoteBuild: true
 <% } -%>
 <% if (withFrontend) { -%>
   frontend:
@@ -15,6 +17,7 @@ services:
     host: containerapp
     docker:
       path: ./Dockerfile
+      remoteBuild: true
 <% } -%>
 hooks:
   preprovision:

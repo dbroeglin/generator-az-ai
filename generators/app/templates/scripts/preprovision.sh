@@ -61,7 +61,6 @@ then
             --output tsv
     )"
 
-
     az rest \
         --method PATCH \
         --headers 'Content-Type=application/json' \
@@ -78,7 +77,7 @@ then
 
     echo "App $APP_NAME created with ID $AZURE_CLIENT_APP_ID and SP ID $SERVICE_PRINCIPAL_ID"
 else
-    echo "\e[3;33mApp '$AZURE_CLIENT_APP_ID' already exists, skipping creation\e[0m"
+    echo -e "\e[3;33mApp '$AZURE_CLIENT_APP_ID' already exists, skipping creation\e[0m"
 fi
 
 azd env set AZURE_CLIENT_APP_ID "$AZURE_CLIENT_APP_ID"
