@@ -6,9 +6,9 @@ sudo apt update
 
 # Install uv, see https://astral.sh for additional information
 curl -LsSf https://astral.sh/uv/install.sh | sh
-<% if (solutionLevel > 100) { -%>
 echo 'export UV_LINK_MODE=copy' >> $HOME/.bashrc
 source $HOME/.bashrc
+<% if (solutionLevel > 100) { -%>
 uv sync --all-packages
 <% } -%>
 
