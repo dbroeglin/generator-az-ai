@@ -96,6 +96,13 @@ export default class extends Generator {
       this.props
     );
 
+    if (this.props.solutionLevel > 100) {
+      this.fs.copy(
+        this.templatePath(".dockerignore"),
+        this.destinationPath(".dockerignore")
+      );
+    }
+
     return false;
   }
 

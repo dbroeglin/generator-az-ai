@@ -3,6 +3,8 @@ import pytest
 class AigbbGeneratorBase:
     @pytest.mark.slow
     def test_deployment(self, solution, azd_env):
+        solution.run_in("uv sync", path="src/frontend")
+        solution.run_in("uv sync", path="src/backend")
         solution.run_in("azd up --no-prompt")
 
         with open(f"{solution}/src/frontend/app.py", "a") as f:

@@ -9,6 +9,9 @@ services:
     docker:
       path: ./Dockerfile
       remoteBuild: true
+<% if (solutionLevel > 100) { -%>
+      context: ../..
+<% } -%>
 <% } -%>
 <% if (withFrontend) { -%>
   frontend:
@@ -18,6 +21,9 @@ services:
     docker:
       path: ./Dockerfile
       remoteBuild: true
+<% if (solutionLevel > 100) { -%>
+      context: ../..
+<% } -%>
 <% } -%>
 hooks:
   preprovision:

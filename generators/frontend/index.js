@@ -37,14 +37,16 @@ export default class FrontendGenerator extends Generator {
       this.destinationPath("src/frontend"),
       this.props
     );
-    this.fs.copy(
-      this.templatePath("src/frontend/.dockerignore"),
-      this.destinationPath("src/frontend/.dockerignore")
-    );
     this.fs.write(
       this.destinationPath("src/frontend/.python-version"),
       this.props.pythonVersion
     );
+    if (this.props.solutionLevel == 100) {
+      this.fs.copy(
+        this.templatePath("src/backend/.dockerignore"),
+        this.destinationPath("src/backend/.dockerignore")
+      );
+    }
   }
 
   end() {
