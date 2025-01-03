@@ -43,8 +43,8 @@ export default class FrontendGenerator extends Generator {
     );
     if (this.props.solutionLevel == 100) {
       this.fs.copy(
-        this.templatePath("src/backend/.dockerignore"),
-        this.destinationPath("src/backend/.dockerignore")
+        this.templatePath("src/frontend/.dockerignore"),
+        this.destinationPath("src/frontend/.dockerignore")
       );
     }
   }
