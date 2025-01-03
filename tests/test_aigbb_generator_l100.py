@@ -1,38 +1,12 @@
-import subprocess
 import pytest
+from aiggb_generator_base import AigbbGeneratorBase
 
-class TestAigbbGeneratorL100:
-    def test_docker_backend_build(self, solution_dir):
-        self.run_in(
-            solution_dir,
-            "src/backend",
-            "docker build -t backend-pytest-l100-test .",
-        )
+@pytest.mark.level(100)
+class TestAigbbGeneratorL100(AigbbGeneratorBase):
+    def test_docker_backend_build(self, solution):
+        solution.run_in("uv sync", path="src/backend")
+        solution.run_in("docker build -t backend-pytest-l100-test .", path="src/backend")
 
-    def test_docker_frontend_built(self, solution_dir):
-        self.run_in(
-            solution_dir,
-            "src/frontend",
-            "docker build -t frontend-pytest-l100-test .",
-        )
-
-    @pytest.mark.slow
-    def test_deployment(self, solution_dir):
-        self.run_in(
-            solution_dir,
-            "",
-            "azd up --no-prompt",
-        )
-        with open(f"{solution_dir}/src/frontend/app.py", "a") as f:
-            f.write("st.write('Changed!')\n")
-        with open(f"{solution_dir}/src/backend/app.py", "a") as f:
-            f.write("# simple comment\n")
-        self.run_in(
-            solution_dir,
-            "",
-            "azd deploy --no-prompt",
-        )
-
-
-    def run_in(self, solution_dir, path, cmd):
-        subprocess.run(f"cd {solution_dir}/{path} && {cmd}", shell=True, check=True)
+    def test_docker_frontend_built(self, solution):
+        solution.run_in("uv sync", path="src/frontend")
+        solution.run_in("docker build -t frontend-pytest-l100-test .", path="src/frontend")

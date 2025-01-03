@@ -1,24 +1,24 @@
-import os
-from test_aigbb_generator_l100 import TestAigbbGeneratorL100
+import pytest
+from aiggb_generator_base import AigbbGeneratorBase
 
-class TestAigbbGeneratorL300(TestAigbbGeneratorL100):
-    def test_docker_uv(self, solution_dir):
-        self.run_in(
-            solution_dir,
-            "",
-            "uv sync",
+@pytest.mark.level(300)
+class TestAigbbGeneratorL300(AigbbGeneratorBase):
+    def test_docker_backend_build(self, solution):
+        solution.run_in("uv sync", path="src/backend")
+        solution.run_in(
+            "docker build -f Dockerfile -t backend-pytest-l100-test ../..",
+            path="src/backend",
         )
 
-    def test_test_package(self, solution_dir):
-        self.run_in(
-            solution_dir,
-            "src/aigbb-scaffolding-core",
-            "uv run pytest -s",
+    def test_docker_frontend_built(self, solution):
+        solution.run_in("uv sync", path="src/frontend")
+        solution.run_in(
+            "docker build -f Dockerfile -t frontend-pytest-l100-test  ../..",
+            path="src/frontend",
         )
 
-    def test_build_package(self, solution_dir):
-        self.run_in(
-            solution_dir,
-            "src/aigbb-scaffolding-core",
-            "uv build",
-        )
+    def test_pytest_package(self, solution):
+        solution.run_in("uv run pytest -s", path="src/aigbb-scaffolding-core")
+
+    def test_build_package(self, solution):
+        solution.run_in("uv build", path="src/aigbb-scaffolding-core")
