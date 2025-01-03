@@ -82,26 +82,22 @@ COPY src/${PACKAGE_NAME}/.python-version /app/src/${PACKAGE_NAME}/
 COPY src/${PACKAGE_NAME}/pyproject.toml /app/src/${PACKAGE_NAME}/
 COPY src/${APP_NAME}/pyproject.toml /app/src/${APP_NAME}/
 COPY src/${APP_NAME}/.python-version /app/src/${APP_NAME}/
-RUN --mount=type=cache,target=/root/.cache/uv <<EOT
-uv sync \
+RUN uv sync \
     --frozen \
     --no-dev \
     --no-install-workspace \
     --no-editable \
     --all-packages
-EOT
 
 ## Install the app last as it changes most often
 
 COPY src/${PACKAGE_NAME} /app/src/${PACKAGE_NAME}
 COPY src/${APP_NAME} /app/src/${APP_NAME}
-RUN --mount=type=cache,target=/root/.cache/uv <<EOT
-uv sync \
+RUN uv sync \
     --frozen \
     --no-dev \
     --no-editable \
     --project src/${APP_NAME}
-EOT
 
 ###############
 # Final image #
