@@ -59,4 +59,3 @@ def azd_env(solution):
     yield env_name
 
     solution.run_in("azd down --purge --force --no-prompt || true")
-    solution.run_in(f"az group delete --name {resource_group_name} --yes || true")
