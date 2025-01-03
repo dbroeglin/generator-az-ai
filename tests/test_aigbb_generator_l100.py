@@ -1,5 +1,5 @@
 import subprocess
-
+import pytest
 
 class TestAigbbGeneratorL100:
     def test_docker_backend_build(self, solution_dir):
@@ -16,6 +16,7 @@ class TestAigbbGeneratorL100:
             "docker build -t frontend-pytest-l100-test .",
         )
 
+    @pytest.mark.slow
     def test_deployment(self, solution_dir):
         self.run_in(
             solution_dir,
