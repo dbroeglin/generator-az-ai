@@ -321,7 +321,7 @@ module backendApp 'modules/app/container-apps.bicep' = {
       // Required for managed identity
       AZURE_CLIENT_ID: backendIdentity.outputs.clientId
     }
-<% if (solutionLevel > 100) { -%>}
+<% if (solutionLevel > 100) { -%>
     keyvaultIdentities: {
       'microsoft-provider-authentication-secret': {
         keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
