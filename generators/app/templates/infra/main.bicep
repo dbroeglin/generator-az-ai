@@ -98,15 +98,16 @@ var tags = union(
 
 /* --------------------- Globally Unique Resource Names --------------------- */
 
-var _applicationInsightsName = !empty(applicationInsightsName) ? applicationInsightsName : take('${abbreviations.insightsComponents}${environmentName}', 255)
+var _applicationInsightsName = !empty(applicationInsightsName) ? applicationInsightsName : take('${abbreviations.insightsComponents}-${environmentName}', 255)
+var _logAnalyticsWorkspaceName = take('${abbreviations.operationalInsightsWorkspaces}-${environmentName}', 63)
 <% if (withFrontend || withBackend) { -%>
   var _containerRegistryName = !empty(containerRegistryName)
     ? containerRegistryName
     : take('${abbreviations.containerRegistryRegistries}${take(alphaNumericEnvironmentName, 35)}${resourceToken}', 50)
-  var _keyVaultName = take('${abbreviations.keyVaultVaults}${alphaNumericEnvironmentName}${resourceToken}', 24)
+  var _keyVaultName = take('${abbreviations.keyVaultVaults}${alphaNumericEnvironmentName}-${resourceToken}', 24)
   var _containerAppsEnvironmentName = !empty(containerAppsEnvironmentName)
     ? containerAppsEnvironmentName
-    : take('${abbreviations.appManagedEnvironments}${environmentName}', 60)
+    : take('${abbreviations.appManagedEnvironments}-${environmentName}', 60)
 <% } -%>
 
 /* ----------------------------- Resource Names ----------------------------- */
@@ -129,7 +130,7 @@ var _applicationInsightsName = !empty(applicationInsightsName) ? applicationInsi
 /* -------------------------------------------------------------------------- */
 
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
-  name: 'logAnalyticsWorkspace'
+  name: _logAnalyticsWorkspaceName
   location: location
   properties: {
     retentionInDays: 30
