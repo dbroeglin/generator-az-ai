@@ -7,7 +7,9 @@ requires-python = ">=<%- pythonVersion %>"
 dependencies = [
     "streamlit ~=1.41.1",
     "requests ~=2.32.3",
+<% if (solutionLevel > 100) { -%>
     "azure-identity ~=1.19.0",
+<% } -%>
     "python-dotenv ~=1.0.1",
 <% if (withPackage) { -%>
     "<%- packageSlug %>",
