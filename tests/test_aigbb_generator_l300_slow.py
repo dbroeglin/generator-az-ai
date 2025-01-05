@@ -1,12 +1,12 @@
 import pytest
 
-class AigbbGeneratorBase:
-    @pytest.mark.slow
-    def test_deployment(self, solution, azd_env):
-        solution.run_in("uv sync", path="src/frontend")
-        solution.run_in("uv sync", path="src/backend")
-        solution.run_in("azd up --no-prompt")
+@pytest.mark.level(300)
+@pytest.mark.dependency()
+class TestAigbbGeneratorL300Slow:
 
+    @pytest.mark.slow
+    @pytest.mark.usefixtures("depend_on_fast", "azd_env")
+    def test_zzz_deployment(self, solution):
         with open(f"{solution}/src/frontend/app.py", "a") as f:
             f.write("st.write('Changed!')\n")
         with open(f"{solution}/src/backend/app.py", "a") as f:

@@ -1,6 +1,8 @@
 import pytest
+import os
 import shutil
 import subprocess
+from pytest_dependency import depends
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -38,23 +40,42 @@ def solution(request, tmp_path_factory):
         if mark.name == "level":
             level = mark.args[0]
     dir = tmp_path_factory.mktemp("base") / "test-solution"
-    # execute a multi-line shell command
-    subprocess.run(
-        f"aigbb-generator-test '{dir.resolve()}' {level}", shell=True, check=True
-    )
-    yield Solution(dir.resolve())
+    os.mkdir(dir.resolve())
+
+    solution = Solution(dir.resolve())
+    solution.run_in(f"aigbb-generator-test '{dir.resolve()}' {level}")
+    yield solution
     shutil.rmtree(dir)
 
 
 @pytest.fixture(scope="class")
-def azd_env(solution):
-    env_name = "pyt-003"
-    location = "francecentral"
+def depend_on_fast(request):
+    # We depend on the slow tests so that we don't waste time creating the env if
+    # they fail.
+    # Warning: slow tests have to be collected after the fast tests for this to work.
+
+    fast_tests = []
+    for node in request.session.items:
+        if node.get_closest_marker("level"):
+            if (node.get_closest_marker("level").args[0] == request.node.get_closest_marker("level").args[0]
+                and not node.get_closest_marker("slow")):
+                fast_tests.append(node.nodeid)
+
+    depends(request, fast_tests, scope='session')
+
+@pytest.fixture(scope="class")
+def azd_env(request, solution):
+
+    instance_count = os.getenv('AZURE_INSTANCE_COUNT', '001')
+    env_name = f"pyt-aigbb-{instance_count}"
+    location = os.getenv('AZURE_LOCATION', 'francecentral')
     resource_group_name = f"rg-{env_name}"
     solution.run_in(f"az group create --location {location} --name {resource_group_name}")
     solution.run_in(f"azd env new {env_name}")
     solution.run_in(f"azd env set AZURE_RESOURCE_GROUP {resource_group_name}")
     solution.run_in(f"azd env set AZURE_LOCATION {location}")
+
+    solution.run_in("azd up --no-prompt")
 
     yield env_name
 

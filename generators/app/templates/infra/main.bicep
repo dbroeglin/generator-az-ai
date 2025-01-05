@@ -104,10 +104,10 @@ var _logAnalyticsWorkspaceName = take('${abbreviations.operationalInsightsWorksp
   var _containerRegistryName = !empty(containerRegistryName)
     ? containerRegistryName
     : take('${abbreviations.containerRegistryRegistries}${take(alphaNumericEnvironmentName, 35)}${resourceToken}', 50)
-  var _keyVaultName = take('${abbreviations.keyVaultVaults}${alphaNumericEnvironmentName}-${resourceToken}', 24)
+  var _keyVaultName = take('${abbreviations.keyVaultVaults}${environmentName}-${resourceToken}', 24)
   var _containerAppsEnvironmentName = !empty(containerAppsEnvironmentName)
     ? containerAppsEnvironmentName
-    : take('${abbreviations.appManagedEnvironments}-${environmentName}', 60)
+    : take('${abbreviations.appManagedEnvironments}-${environmentName}-${resourceToken}', 60)
 <% } -%>
 
 /* ----------------------------- Resource Names ----------------------------- */
