@@ -79,7 +79,7 @@ yo aigbb  ../hello-ai-world \
 yo aigbb  ../aigbb-scaffolding-test-l100 \
   --solutionName 'AI GBB scaffolding tool test' \
   --solutionLevel 100 \
-  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool test (l300)' \
+  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool test (l100)' \
   --solutionSlug aigbb-scaffolding-test-l100 \
   --solutionVersion 0.1.0 \
   --creatorName 'Dominique Broeglin' \
