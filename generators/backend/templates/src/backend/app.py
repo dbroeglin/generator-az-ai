@@ -1,28 +1,52 @@
+import os
 import logging
-from dotenv import load_dotenv
 from fastapi import FastAPI, Body
 from fastapi.responses import JSONResponse
-from io import StringIO
-from subprocess import run, PIPE
+from orchestrator import SemanticOrchestrator
+import util
 
-logging.basicConfig(level=logging.INFO)
 
-def load_dotenv_from_azd():
-    result = run("azd env get-values", stdout=PIPE, stderr=PIPE, shell=True, text=True)
-    if result.returncode == 0:
-        logging.info(f"Found AZD environment. Loading...")
-        load_dotenv(stream=StringIO(result.stdout))
-    else:
-        logging.info(f"AZD environment not found. Trying to load from .env file...")
-        load_dotenv()
+util.load_dotenv_from_azd()
+util.set_up_tracing()
+util.set_up_metrics()
+util.set_up_logging()
 
-load_dotenv_from_azd()
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(levelname)s:   %(name)s   %(message)s',
+)
+logger = logging.getLogger(__name__)
+logging.getLogger('azure.core.pipeline.policies.http_logging_policy').setLevel(logging.WARNING)
+logging.getLogger('azure.monitor.opentelemetry.exporter.export').setLevel(logging.WARNING)
 
+orchestrator = SemanticOrchestrator()
 app = FastAPI()
 
-@app.get("/echo")
-async def http_trigger(request_body: dict = Body(...)):
-    logging.info('API request received with body %s', request_body)
+logger.info(f"Diagnostics: {os.getenv('SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS')}")
+
+@app.post("/blog")
+async def http_blog(request_body: dict = Body(...)):
+    logger.info('API request received with body %s', request_body)
+    
+    topic = request_body.get('topic', 'Tesla')
+    content = f"Write a blog post about {topic}."
+    
+    conversation_messages = []
+    conversation_messages.append({'role': 'user', 'name': 'user', 'content': content})
+    
+    reply = await orchestrator.process_conversation(conversation_messages)
+    
+    conversation_messages.append(reply)
+
+    return JSONResponse(
+        content=reply,
+        status_code=200
+    )
+
+# Not used. Keeping for demonstration purposes.
+@app.post("/echo")
+async def http_echo(request_body: dict = Body(...)):
+    logger.info('API request received with body %s', request_body)
 
     return JSONResponse(
         content=request_body,
@@ -31,4 +55,6 @@ async def http_trigger(request_body: dict = Body(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+
+    # uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True, log_level="info")
+    uvicorn.run("app:app", host="0.0.0.0", port=8000)

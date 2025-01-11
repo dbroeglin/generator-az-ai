@@ -1,4 +1,6 @@
 {
+  "aiPortalHub": "hub-",
+  "aiPortalProject": "proj-",
   "analysisServicesServers": "as",
   "apiManagementService": "apim-",
   "appConfigurationStores": "appcs-",
@@ -13,6 +15,7 @@
   "cdnProfilesEndpoints": "cdne-",
   "cognitiveServicesAccounts": "cog-",
   "cognitiveServicesFormRecognizer": "cog-fr-",
+  "cognitiveServicesOpenAI": "aoai",
   "cognitiveServicesTextAnalytics": "cog-ta-",
   "computeAvailabilitySets": "avail-",
   "computeCloudServices": "cld-",

@@ -8,6 +8,13 @@ dependencies = [
     "fastapi ~=0.115.6",
     "uvicorn ~=0.32.1",
     "python-dotenv ~=1.0.1",
+    "pyyaml>=6.0.2",
+    "semantic-kernel>=1.17.1",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.29.0",
+    "opentelemetry-instrumentation>=0.50b0",
+    "azure-monitor-opentelemetry-exporter>=1.0.0b32",
+    "azure-identity>=1.19.0",
+    "azure-ai-inference[opentelemetry]>=1.0.0b6",
 <% if (withPackage) { -%>
     "<%- packageSlug %>",
 <% } -%>

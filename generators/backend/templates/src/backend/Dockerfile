@@ -19,7 +19,7 @@ ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/app/.venv
     # UV_PYTHON_DOWNLOADS=never \
-    # UV_PYTHON=python<%- pythonVersion %> \
+    # UV_PYTHON=python<%- pythonVersion %>
 
 WORKDIR /app
 
@@ -31,7 +31,8 @@ RUN uv sync \
     --no-editable \
     --all-packages
 
-COPY app.py /app/
+COPY *.py /app/
+COPY agents /app/agents
 
 ###############
 # Final image #
@@ -52,7 +53,7 @@ ENTRYPOINT ["/app/.venv/bin/uvicorn", "app:app", "--host", "0.0.0.0", "--port", 
 # Base stage (shared between build and final) #
 ###############################################
 
-FROM python:3.12-slim AS base
+FROM python:<%- pythonVersion %>-slim AS base
 
 ENV APP_NAME=backend
 ENV PACKAGE_NAME=<%= packageSlug %>
@@ -70,7 +71,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_DOWNLOADS=never \
-    UV_PYTHON=python3.12 \
+    UV_PYTHON=python<%- pythonVersion %> \
     UV_PROJECT_ENVIRONMENT=/app/.venv
 
 WORKDIR /app

@@ -19,7 +19,7 @@ ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/app/.venv
     # UV_PYTHON_DOWNLOADS=never \
-    # UV_PYTHON=python<%- pythonVersion %> \
+    # UV_PYTHON=python<%- pythonVersion %>
 
 WORKDIR /app
 
@@ -115,4 +115,4 @@ COPY --from=builder --chown=app:app /app/src/${APP_NAME} /app/src/${APP_NAME}
 
 EXPOSE 8000
 ENTRYPOINT ["/app/.venv/bin/streamlit", "run", "app.py", "--server.port=8000", "--server.address=0.0.0.0"]
-<% } %>
+<% } -%>

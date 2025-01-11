@@ -8,10 +8,10 @@ metadata author = '<%- authorContact %>'
 
 @minLength(1)
 @maxLength(64)
-@description('Name of the the environment which is used to generate a short unique hash used in all resources.')
+@description('Name of the environment which is used to generate a short unique hash used in all resources.')
 param environmentName string
 
-@description('Principal ID of the user runing the deployment')
+@description('Principal ID of the user running the deployment')
 param azurePrincipalId string
 
 @description('Extra tags to be applied to provisioned resources')
@@ -21,6 +21,10 @@ param extraTags object = {}
 param location string = resourceGroup().location
 
 /* ---------------------------- Shared Resources ---------------------------- */
+
+@maxLength(63)
+@description('Name of the log analytics workspace to deploy. If not specified, a name will be generated. The maximum length is 63 characters.')
+param logAnalyticsWorkspaceName string = ''
 
 @maxLength(255)
 @description('Name of the application insights to deploy. If not specified, a name will be generated. The maximum length is 255 characters.')
@@ -96,57 +100,228 @@ var tags = union(
   extraTags
 )
 
+@description('Azure OpenAI API Version')
+var azureOpenAiApiVersion = '2024-12-01-preview'
+
 /* --------------------- Globally Unique Resource Names --------------------- */
 
-var _applicationInsightsName = !empty(applicationInsightsName) ? applicationInsightsName : take('${abbreviations.insightsComponents}-${environmentName}', 255)
-var _logAnalyticsWorkspaceName = take('${abbreviations.operationalInsightsWorkspaces}-${environmentName}', 63)
+var _applicationInsightsName = !empty(applicationInsightsName)
+  ? applicationInsightsName
+  : take('${abbreviations.insightsComponents}${environmentName}', 255)
+var _logAnalyticsWorkspaceName = !empty(logAnalyticsWorkspaceName)
+  ? logAnalyticsWorkspaceName
+  : take('${abbreviations.operationalInsightsWorkspaces}${environmentName}', 63)
+
+var _storageAccountName = take(
+  '${abbreviations.storageStorageAccounts}${alphaNumericEnvironmentName}${resourceToken}',
+  24
+)
+var _azureOpenAiName = take('${abbreviations.cognitiveServicesOpenAI}${alphaNumericEnvironmentName}', 63)
+var _aiHubName = take('${abbreviations.aiPortalHub}${environmentName}', 260)
+var _aiProjectName = take('${abbreviations.aiPortalProject}${environmentName}', 260)
+var _aiSearchServiceName = take('${abbreviations.searchSearchServices}${environmentName}', 260)
+
 <% if (withFrontend || withBackend) { -%>
-  var _containerRegistryName = !empty(containerRegistryName)
-    ? containerRegistryName
-    : take('${abbreviations.containerRegistryRegistries}${take(alphaNumericEnvironmentName, 35)}${resourceToken}', 50)
-  var _keyVaultName = take('${abbreviations.keyVaultVaults}${environmentName}-${resourceToken}', 24)
-  var _containerAppsEnvironmentName = !empty(containerAppsEnvironmentName)
-    ? containerAppsEnvironmentName
-    : take('${abbreviations.appManagedEnvironments}-${environmentName}-${resourceToken}', 60)
+var _containerRegistryName = !empty(containerRegistryName)
+  ? containerRegistryName
+  : take('${abbreviations.containerRegistryRegistries}${take(alphaNumericEnvironmentName, 35)}${resourceToken}', 50)
+var _keyVaultName = take('${abbreviations.keyVaultVaults}${alphaNumericEnvironmentName}${resourceToken}', 24)
+var _containerAppsEnvironmentName = !empty(containerAppsEnvironmentName)
+  ? containerAppsEnvironmentName
+  : take('${abbreviations.appManagedEnvironments}${environmentName}', 60)
 <% } -%>
 
 /* ----------------------------- Resource Names ----------------------------- */
 
 <% if (withFrontend) { -%>
-  var _frontendIdentityName = take('${abbreviations.managedIdentityUserAssignedIdentities}frontend-${environmentName}', 32)
-  var _frontendContainerAppName = !empty(frontendContainerAppName)
-    ? frontendContainerAppName
-    : take('${abbreviations.appContainerApps}frontend-${environmentName}', 32)
+var _frontendIdentityName = take(
+  '${abbreviations.managedIdentityUserAssignedIdentities}frontend-${environmentName}',
+  32
+)
+var _frontendContainerAppName = !empty(frontendContainerAppName)
+  ? frontendContainerAppName
+  : take('${abbreviations.appContainerApps}frontend-${environmentName}', 32)
 <% } -%>
 <% if (withBackend) { -%>
-  var _backendIdentityName = take('${abbreviations.managedIdentityUserAssignedIdentities}backend-${environmentName}', 32)
-  var _backendContainerAppName = !empty(backendContainerAppName)
-    ? backendContainerAppName
-    : take('${abbreviations.appContainerApps}backend-${environmentName}', 32)
+var _backendIdentityName = take('${abbreviations.managedIdentityUserAssignedIdentities}backend-${environmentName}', 32)
+var _backendContainerAppName = !empty(backendContainerAppName)
+  ? backendContainerAppName
+  : take('${abbreviations.appContainerApps}backend-${environmentName}', 32)
 <% } -%>
 
 /* -------------------------------------------------------------------------- */
 /*                                  RESOURCES                                 */
 /* -------------------------------------------------------------------------- */
 
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
-  name: _logAnalyticsWorkspaceName
-  location: location
-  properties: {
-    retentionInDays: 30
+/* -------------------------------- AI Infra  ------------------------------- */
+
+module hub 'modules/ai/hub.bicep' = {
+  name: 'hub'
+  params: {
+    location: location
+    tags: tags
+    name: _aiHubName
+    displayName: _aiHubName
+    keyVaultId: keyVault.outputs.resourceId
+    storageAccountId: storageAccount.outputs.resourceId
+    containerRegistryId: containerRegistry.outputs.resourceId
+    applicationInsightsId: appInsightsComponent.outputs.resourceId
+    openAiName: azureOpenAi.outputs.name
+    openAiConnectionName: 'aoai-connection'
+    openAiContentSafetyConnectionName: 'aoai-content-safety-connection'
+    aiSearchName: searchService.outputs.name
+    aiSearchConnectionName: 'search-service-connection'
   }
-  tags: tags
 }
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: _applicationInsightsName
-  location: appInsightsLocation
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    WorkspaceResourceId: logAnalytics.id
+module project 'modules/ai/project.bicep' = {
+  name: 'project'
+  params: {
+    location: location
+    tags: tags
+    name: _aiProjectName
+    displayName: _aiProjectName
+    hubName: hub.outputs.name
   }
 }
+
+module storageAccount 'br/public:avm/res/storage/storage-account:0.15.0' = {
+  name: 'storageAccount'
+  scope: resourceGroup()
+  params: {
+    location: location
+    tags: tags
+    name: _storageAccountName
+    kind: 'StorageV2'
+    blobServices: {
+      corsRules: [
+        {
+          allowedOrigins: [
+            'https://mlworkspace.azure.ai'
+            'https://ml.azure.com'
+            'https://*.ml.azure.com'
+            'https://ai.azure.com'
+            'https://*.ai.azure.com'
+            'https://mlworkspacecanary.azure.ai'
+            'https://mlworkspace.azureml-test.net'
+          ]
+          allowedMethods: [
+            'GET'
+            'HEAD'
+            'POST'
+            'PUT'
+            'DELETE'
+            'OPTIONS'
+            'PATCH'
+          ]
+          maxAgeInSeconds: 1800
+          exposedHeaders: [
+            '*'
+          ]
+          allowedHeaders: [
+            '*'
+          ]
+        }
+      ]
+      containers: [
+        {
+          name: 'default'
+          roleAssignments: [
+            {
+              roleDefinitionIdOrName: 'Storage Blob Data Contributor'
+              principalId: backendIdentity.outputs.principalId
+              principalType: 'ServicePrincipal'
+            }
+          ]
+        }
+      ]
+      deleteRetentionPolicy: {
+        allowPermanentDelete: false
+        enabled: false
+      }
+      shareDeleteRetentionPolicy: {
+        enabled: true
+        days: 7
+      }
+    }
+  }
+}
+
+// Also rerefernced in the outputs with the sequential index
+// order of the model definitions is important
+var deployments = [
+      {
+        name: 'gpt-4o-2024-08-06'
+        sku: {
+          name: 'GlobalStandard'
+          capacity: 50
+        }
+        model: {
+          format: 'OpenAI'
+          name: 'gpt-4o'
+          version: '2024-08-06'
+        }
+        versionUpgradeOption: 'OnceCurrentVersionExpired'
+      }
+    ]
+
+module azureOpenAi 'modules/ai/cognitiveservices.bicep' = {
+  name: 'cognitiveServices'
+  params: {
+    location: location
+    tags: tags
+    name: _azureOpenAiName
+    kind: 'AIServices'
+    customSubDomainName: _azureOpenAiName
+    deployments:  deployments
+    logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+    roleAssignments: [
+      {
+        roleDefinitionIdOrName: 'Cognitive Services OpenAI User'
+        principalId: backendIdentity.outputs.principalId
+        principalType: 'ServicePrincipal'
+      }
+      {
+        roleDefinitionIdOrName: 'Cognitive Services OpenAI Contributor'
+        principalId: azurePrincipalId
+      }
+    ]
+  }
+}
+
+module searchService 'br/public:avm/res/search/search-service:0.8.2' = {
+  name: _aiSearchServiceName
+  scope: resourceGroup()
+  params: {
+    location: location
+    tags: tags
+    name: _aiProjectName
+    sku: 'standard'
+  }
+}
+
+/* ---------------------------- Observability  ------------------------------ */
+
+module logAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0.9.1' = {
+  name: 'workspaceDeployment'
+  params: {
+    name: _logAnalyticsWorkspaceName
+    location: location
+    tags: tags
+    dataRetention: 30
+  }
+}
+
+module appInsightsComponent 'br/public:avm/res/insights/component:0.4.2' = {
+  name: _applicationInsightsName
+  params: {
+    name: _applicationInsightsName
+    location: appInsightsLocation
+    workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+  }
+}
+
+/* ------------------------ Common App Resources  -------------------------- */
 
 <% if (withFrontend || withBackend) { -%>
 module containerRegistry 'modules/app/container-registry.bicep' = {
@@ -167,19 +342,15 @@ module containerRegistry 'modules/app/container-registry.bicep' = {
   }
 }
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2024-03-01' = {
-  name: _containerAppsEnvironmentName
-  location: location
-  tags: tags
-  properties: {
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: logAnalytics.properties.customerId
-        sharedKey: logAnalytics.listKeys().primarySharedKey
-      }
-    }
-    daprAIConnectionString: appInsights.properties.ConnectionString
+module containerAppsEnvironment 'br/public:avm/res/app/managed-environment:0.8.1' = {
+  name: 'containerAppsEnvironment'
+  params: {
+    name: _containerAppsEnvironmentName
+    location: location
+    tags: tags
+    logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+    daprAIConnectionString: appInsightsComponent.outputs.connectionString
+    zoneRedundant: false
   }
 }
 
@@ -191,7 +362,7 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.11.0' = {
     tags: tags
     name: _keyVaultName
     enableRbacAuthorization: true
-    enablePurgeProtection: false // enable in production to prevent accidental deletion
+    enablePurgeProtection: false // Set to true to if you deploy in production and want to protect against accidental deletion
     roleAssignments: [
 <% if (withFrontend) { -%>
       {
@@ -212,18 +383,21 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.11.0' = {
         roleDefinitionIdOrName: 'Key Vault Administrator'
       }
     ]
-    secrets: empty(authClientSecret) ? [] : [
-      {
-        name: authClientSecretName
-        value: authClientSecret
-      }
-    ]
+    secrets: empty(authClientSecret)
+      ? []
+      : [
+          {
+            name: authClientSecretName
+            value: authClientSecret
+          }
+        ]
   }
 }
 <% } -%>
 
 <% if (withFrontend) { -%>
 /* ------------------------------ Frontend App ------------------------------ */
+
 module frontendIdentity './modules/app/identity.bicep' = {
   name: 'frontendIdentity'
   scope: resourceGroup()
@@ -237,7 +411,7 @@ var keyvaultIdentities = authClientSecret != ''
   ? {
       'microsoft-provider-authentication-secret': {
         keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
-        identity: frontendIdentity.outputs.identityId
+        identity: frontendIdentity.outputs.resourceId
       }
     }
   : {}
@@ -248,8 +422,8 @@ module frontendApp 'modules/app/container-apps.bicep' = {
   params: {
     name: _frontendContainerAppName
     tags: tags
-    identityId: frontendIdentity.outputs.identityId
-    containerAppsEnvironmentName: containerAppsEnvironment.name
+    identityId: frontendIdentity.outputs.resourceId
+    containerAppsEnvironmentName: containerAppsEnvironment.outputs.name
     containerRegistryName: containerRegistry.outputs.name
     exists: frontendExists
     serviceName: 'frontend' // Must match the service name in azure.yaml
@@ -257,12 +431,13 @@ module frontendApp 'modules/app/container-apps.bicep' = {
 <% if (withBackend) { -%>
       // BACKEND_ENDPOINT: backendApp.outputs.URL
       BACKEND_ENDPOINT: backendApp.outputs.URL
+
 <% } -%>
       // Required for the frontend app to ask for a token for the backend app
       AZURE_CLIENT_APP_ID: authClientId
 
       // Required for container app daprAI
-      APPLICATIONINSIGHTS_CONNECTION_STRING: appInsights.properties.ConnectionString
+      APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsComponent.outputs.connectionString
 
       // Required for managed identity
       AZURE_CLIENT_ID: frontendIdentity.outputs.clientId
@@ -279,7 +454,7 @@ module frontendContainerAppAuth 'modules/app/container-apps-auth.bicep' = if (au
     clientSecretName: 'microsoft-provider-authentication-secret'
     openIdIssuer: '${environment().authentication.loginEndpoint}${authTenantId}/v2.0' // Works only for Microsoft Entra
     unauthenticatedClientAction: 'RedirectToLoginPage'
-    allowedApplications:[
+    allowedApplications: [
       '04b07795-8ddb-461a-bbee-02f9e1bf7b46' // AZ CLI for testing purposes
     ]
   }
@@ -288,6 +463,7 @@ module frontendContainerAppAuth 'modules/app/container-apps-auth.bicep' = if (au
 
 <% if (withBackend) { -%>
 /* ------------------------------ Backend App ------------------------------- */
+
 module backendIdentity './modules/app/identity.bicep' = {
   name: 'backendIdentity'
   scope: resourceGroup()
@@ -303,8 +479,8 @@ module backendApp 'modules/app/container-apps.bicep' = {
   params: {
     name: _backendContainerAppName
     tags: tags
-    identityId: backendIdentity.outputs.identityId
-    containerAppsEnvironmentName: containerAppsEnvironment.name
+    identityId: backendIdentity.outputs.resourceId
+    containerAppsEnvironmentName: containerAppsEnvironment.outputs.name
     containerRegistryName: containerRegistry.outputs.name
     exists: backendExists
     serviceName: 'backend' // Must match the service name in azure.yaml
@@ -316,10 +492,14 @@ module backendApp 'modules/app/container-apps.bicep' = {
 <% } -%>
     env: {
       // Required for container app daprAI
-      APPLICATIONINSIGHTS_CONNECTION_STRING: appInsights.properties.ConnectionString
+      APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsComponent.outputs.connectionString
 
       // Required for managed identity
       AZURE_CLIENT_ID: backendIdentity.outputs.clientId
+
+      AZURE_OPENAI_ENDPOINT: azureOpenAi.outputs.endpoint
+      AZURE_OPENAI_DEPLOYMENT_NAME: deployments[0].name
+      AZURE_OPENAI_API_VERSION: azureOpenAiApiVersion
     }
 <% if (solutionLevel > 100) { -%>
     keyvaultIdentities: {
@@ -370,7 +550,7 @@ output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.outputs.logi
 
 <% } -%>
 <% if (withFrontend) { -%>
-@description('Endpoint URL of string Frontend service')
+@description('Endpoint URL of the Frontend service')
 output SERVICE_FRONTEND_URL string = frontendApp.outputs.URL
 
 <% } -%>
@@ -379,12 +559,35 @@ output SERVICE_FRONTEND_URL string = frontendApp.outputs.URL
 output SERVICE_BACKEND_URL string = backendApp.outputs.URL
 
 <% } -%>
-
 @description('ID of the tenant we are deploying to')
 output AZURE_AUTH_TENANT_ID string = authTenantId
 
-@description('Principal ID of the user runing the deployment')
+@description('Principal ID of the user running the deployment')
 output AZURE_PRINCIPAL_ID string = azurePrincipalId
 
 @description('Application registration client ID')
 output AZURE_CLIENT_APP_ID string = authClientId
+
+@description('Azure OpenAI name')
+output AZURE_OPENAI_NAME string = azureOpenAi.outputs.name
+
+@description('Azure OpenAI endpoint')
+output AZURE_OPENAI_ENDPOINT string = azureOpenAi.outputs.endpoint
+
+@description('Azure OpenAI Core Model Deployment Name')
+output AZURE_OPENAI_DEPLOYMENT_NAME string = deployments[0].name
+
+@description('Azure OpenAI Core Model Deployment Name')
+output AZURE_OPENAI_API_VERSION string = azureOpenAiApiVersion
+
+@description('Application Insights name')
+output AZURE_APPLICATION_INSIGHTS_NAME string = appInsightsComponent.outputs.name
+
+@description('Log Analytics Workspace name')
+output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = logAnalyticsWorkspace.outputs.name
+
+@description('Application Insights connection string')
+output APPLICATIONINSIGHTS_CONNECTION_STRING string = appInsightsComponent.outputs.connectionString
+
+@description('Semanti Kernel Diagnostics')
+output SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS bool = true

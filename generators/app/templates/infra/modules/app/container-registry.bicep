@@ -49,5 +49,14 @@ resource acrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for
   }
 }]
 
+
+/* -------------------------------------------------------------------------- */
+/*                                   OUTPUTS                                  */
+/* -------------------------------------------------------------------------- */
+
+@description('The resource ID of the key vault.')
+output resourceId string = containerRegistry.id
+
 output loginServer string = containerRegistry.properties.loginServer
+
 output name string = containerRegistry.name
