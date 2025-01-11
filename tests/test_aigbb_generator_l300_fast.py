@@ -1,8 +1,11 @@
 import pytest
+import json
+
+from dev_container import DevContainer
 
 @pytest.mark.level(300)
 @pytest.mark.dependency()
-class TestAigbbGeneratorL300:
+class TestAigbbGeneratorL300Fast(DevContainer):
     def test_docker_backend_build(self, solution):
         solution.run_in("uv sync", path="src/backend")
         solution.run_in(

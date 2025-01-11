@@ -42,6 +42,7 @@
     "whatwg-url": "^14.1.0"
   },
   "devDependencies": {
+    "@devcontainers/cli": "^0.72.0",
     "yeoman-assert": "^3.1.1",
     "yeoman-test": "^10.0.1"
   },

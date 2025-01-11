@@ -27,7 +27,7 @@ class Solution:
         self.directory = directory
 
     def run_in(self, cmd, path=""):
-        subprocess.run(f"cd {self.directory}/{path} && {cmd}", shell=True, check=True)
+        return subprocess.run(f"cd {self.directory}/{path} && {cmd}", shell=True, check=True)
 
     def __str__(self):
         return str(self.directory)
