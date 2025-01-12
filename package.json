@@ -1,8 +1,8 @@
 {
-  "name": "generator-aigbb",
+  "name": "generator-az-ai",
   "version": "0.0.8",
-  "description": "AI GBB Scaffolding Tool",
-  "homepage": "https://github.com/dbroeglin/generator-aigbb",
+  "description": "Az AI Scaffolding Tool",
+  "homepage": "https://github.com/dbroeglin/generator-az-ai",
   "author": {
     "name": "Dominique Broeglin",
     "email": "dominique.broeglin@microsoft.com",
@@ -14,7 +14,7 @@
   ],
   "main": "generators/index.js",
   "bin": {
-    "aigbb-generator-test": "bin/aigbb-generator-test.js"
+    "az-ai-generator-test": "bin/az-ai-generator-test.js"
   },
   "keywords": [
     "generator",
@@ -25,7 +25,7 @@
     "yeoman-generator"
   ],
   "dependencies": {
-    "@eslint/js": "9.17.0",
+    "@eslint/js": "9.18.0",
     "@yeoman/adapter": "2.0.0",
     "@yeoman/conflicter": "2.3.2",
     "@yeoman/namespace": "1.0.1",
@@ -49,6 +49,6 @@
   "engines": {
     "npm": ">= 4.0.0"
   },
-  "repository": "dbroeglin/generator-aigbb",
+  "repository": "dbroeglin/generator-az-ai",
   "license": "MIT"
 }

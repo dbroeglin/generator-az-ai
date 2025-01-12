@@ -5,7 +5,7 @@ from dev_container import DevContainer
 
 @pytest.mark.level(300)
 @pytest.mark.dependency()
-class TestAigbbGeneratorL300Fast(DevContainer):
+class TestAZAiGeneratorL300Fast(DevContainer):
     def test_docker_backend_build(self, solution):
         solution.run_in("uv sync", path="src/backend")
         solution.run_in(
@@ -21,7 +21,7 @@ class TestAigbbGeneratorL300Fast(DevContainer):
         )
 
     def test_pytest_package(self, solution):
-        solution.run_in("uv run pytest -s", path="src/aigbb-scaffolding-core")
+        solution.run_in("uv run pytest -s", path="src/az-ai-scaffolding-core")
 
     def test_build_package(self, solution):
-        solution.run_in("uv build", path="src/aigbb-scaffolding-core")
+        solution.run_in("uv build", path="src/az-ai-scaffolding-core")

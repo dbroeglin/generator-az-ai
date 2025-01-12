@@ -1,21 +1,21 @@
-# AI GBB Generator [![npm version](https://badge.fury.io/js/generator-aigbb.svg)](https://badge.fury.io/js/generator-aigbb)
+# Az AI Generator [![npm version](https://badge.fury.io/js/generator-az-ai.svg)](https://badge.fury.io/js/generator-az-ai)
 
-> AI GBB Scaffolding Tool
+> Az AI Scaffolding Tool
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/dbroeglin/generator-aigbb) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/dbroeglin/generator-aigbb)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/dbroeglin/generator-az-ai) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/dbroeglin/generator-az-ai)
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and `generator-aigbb` using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [Yeoman](http://yeoman.io) and `generator-az-ai` using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
-npm install -g generator-aigbb
+npm install -g generator-az-ai
 ```
 
 Then generate your new project:
 ```bash
-yo aigbb awesome-ai-app
+yo az-ai awesome-ai-app
 ```
 
 Local development:
@@ -26,7 +26,7 @@ npm link
 Simple end to end testing: 
 ```shell
 ( 
-  rm -rf /tmp/foobar; yo aigbb /tmp/foobar && cd /tmp/foobar && \
+  rm -rf /tmp/foobar; yo az-ai /tmp/foobar && cd /tmp/foobar && \
   AZURE_ENV_NAME=delete-me AZURE_LOCATION=francecentral azd up 
   read
   az ad app delete --id $(az ad app list --display-name "delete-me-app" --query '[].id'  -o tsv)
@@ -57,13 +57,13 @@ curl -i  $(azd env get-value SERVICE_BACKEND_URL)/echo \
 
 Comparing generations:
 ```shell
-yo aigbb  ../hello-ai-world \
+yo az-ai  ../hello-ai-world \
   --solutionName 'Hello AI World' \
   --solutionLevel 100 \
   --solutionDescription 'AI Application chassis - best AI app practices optimized for Azure' \
   --solutionSlug hello-ai-world \
   --solutionVersion 0.1.0 \
-  --creatorName 'AI GBB EMEA' \
+  --creatorName 'Az AI EMEA' \
   --creatorEmail dominique.broeglin@microsoft.com \
   --withGitHub true \
   --withFrontend true \
@@ -76,11 +76,11 @@ yo aigbb  ../hello-ai-world \
 ```
 
 ```shell
-yo aigbb  ../aigbb-scaffolding-test-l100 \
-  --solutionName 'AI GBB scaffolding tool test' \
+yo az-ai  ../az-ai-scaffolding-test-l100 \
+  --solutionName 'Az AI scaffolding tool test' \
   --solutionLevel 100 \
-  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool test (l100)' \
-  --solutionSlug aigbb-scaffolding-test-l100 \
+  --solutionDescription 'Solution generated with the Az AI Scaffolding tool test (l100)' \
+  --solutionSlug az-ai-scaffolding-test-l100 \
   --solutionVersion 0.1.0 \
   --creatorName 'Dominique Broeglin' \
   --creatorEmail dominique.broeglin@microsoft.com \
@@ -88,28 +88,28 @@ yo aigbb  ../aigbb-scaffolding-test-l100 \
   --withBackend true \
   --withGitHub true \
   --gitHubOrg dbroeglin \
-  --gitHubRepo aigbb-scaffolding-test-l100 \
+  --gitHubRepo az-ai-scaffolding-test-l100 \
   --withGitHubPush false
   
 # Positive result: the last line in the command output should be "No changes to commit."
 
-yo aigbb  ../aigbb-scaffolding-test-l300 \
-  --solutionName 'AI GBB scaffolding tool test' \
+yo az-ai  ../az-ai-scaffolding-test-l300 \
+  --solutionName 'Az AI scaffolding tool test' \
   --solutionLevel 300 \
-  --solutionDescription 'Solution generated with the AI GBB Scaffolding tool test (l300)' \
-  --solutionSlug aigbb-scaffolding-test-l300 \
+  --solutionDescription 'Solution generated with the Az AI Scaffolding tool test (l300)' \
+  --solutionSlug az-ai-scaffolding-test-l300 \
   --solutionVersion 0.1.0 \
   --creatorName 'Dominique Broeglin' \
   --creatorEmail dominique.broeglin@microsoft.com \
   --withFrontend true \
   --withBackend true \
   --withPackage true \
-  --packageName 'AI GBB Scaffolding Core' \
-  --packageDescription 'AI GBB Scaffolding Test Core Package' \
-  --packageSlug 'aigbb-scaffolding-core' \
+  --packageName 'Az AI Scaffolding Core' \
+  --packageDescription 'Az AI Scaffolding Test Core Package' \
+  --packageSlug 'az-ai-scaffolding-core' \
   --withGitHub true \
   --gitHubOrg dbroeglin \
-  --gitHubRepo aigbb-scaffolding-test-l300 \
+  --gitHubRepo az-ai-scaffolding-test-l300 \
   --withGitHubPush false
 
   

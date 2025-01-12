@@ -23,7 +23,7 @@ def expect_prompt(child, prompt, default, control=None, answer=None):
     child.sendline()
 
 def test_prompts_l100(solution_dir):
-  child = pexpect.spawn(f"yo aigbb '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
+  child = pexpect.spawn(f"yo az-ai '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
   assert child.isalive()
 
   expect_prompt(child, "What is the human readable name of your solution?", "Test Solution")
@@ -48,7 +48,7 @@ def test_prompts_l100(solution_dir):
 
 
 def test_prompts_l300(solution_dir):
-  child = pexpect.spawn(f"yo aigbb '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
+  child = pexpect.spawn(f"yo az-ai '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
   assert child.isalive()
 
   expect_prompt(child, "What is the human readable name of your solution?", "Test Solution")

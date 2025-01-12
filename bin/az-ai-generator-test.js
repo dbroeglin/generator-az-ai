@@ -2,7 +2,7 @@
 "use strict";
 
 if (!(process.argv.length === 4 || process.argv.length === 5)) {
-  console.error('Usage: aigbb-test <dir> <100|300> (push)');
+  console.error('Usage: az-ai-test <dir> <100|300> (push)');
   process.exit(1);
 }
 
@@ -16,10 +16,10 @@ if (level !== '100' && level !== '300') {
 }
 
 const l100Answers = {
-  solutionName: 'AI GBB scaffolding tool test',
+  solutionName: 'Az AI scaffolding tool test',
   solutionLevel: Number.parseInt(level),
-  solutionDescription: `Solution generated with the AI GBB Scaffolding tool test (level ${level})`,
-  solutionSlug: `aigbb-scaffolding-l${level}-test`,
+  solutionDescription: `Solution generated with the Az AI Scaffolding tool test (level ${level})`,
+  solutionSlug: `az-ai-scaffolding-l${level}-test`,
   solutionVersion: '0.1.0',
   creatorName: 'Dominique Broeglin',
   creatorEmail: 'dominique.broeglin@microsoft.com',
@@ -27,21 +27,21 @@ const l100Answers = {
   withBackend: true,
   withGitHub: true,
   gitHubOrg: 'dbroeglin',
-  gitHubRepo: `aigbb-scaffolding-l${level}-test`,
+  gitHubRepo: `az-ai-scaffolding-l${level}-test`,
   withGitHubPush: '' + push
 }
 const l300Answers = {
   withPackage: true,
-  packageName: 'AI GBB Scaffolding Core',
-  packageDescription: 'AI GBB Scaffolding Test Core Package',
-  packageSlug: 'aigbb-scaffolding-core',
+  packageName: 'Az AI Scaffolding Core',
+  packageDescription: 'Az AI Scaffolding Test Core Package',
+  packageSlug: 'az-ai-scaffolding-core',
 }
 const answers = level === '100' ? l100Answers : { ...l100Answers, ...l300Answers };
 
 const { default: Environment } = await import('yeoman-environment');
 const env = new Environment();
 env.lookup();
-env.run(['aigbb', dir], answers).then(() => {
+env.run(['az-ai', dir], answers).then(() => {
   console.log('success')
 }, err => {
   console.log(`error ${err}`);

@@ -2,8 +2,7 @@ import pytest
 
 @pytest.mark.level(100)
 @pytest.mark.dependency()
-class TestAigbbGeneratorL100Slow:
-
+class TestAZAiGeneratorL100Slow:
     @pytest.mark.slow
     @pytest.mark.usefixtures("depend_on_fast", "azd_env")
     def test_zzz_deployment(self, solution):

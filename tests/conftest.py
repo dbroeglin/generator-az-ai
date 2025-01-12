@@ -43,7 +43,7 @@ def solution(request, tmp_path_factory):
     os.mkdir(dir.resolve())
 
     solution = Solution(dir.resolve())
-    solution.run_in(f"aigbb-generator-test '{dir.resolve()}' {level}")
+    solution.run_in(f"az-ai-generator-test '{dir.resolve()}' {level}")
     yield solution
     shutil.rmtree(dir)
 
@@ -67,7 +67,7 @@ def depend_on_fast(request):
 def azd_env(request, solution):
 
     instance_count = os.getenv('AZURE_INSTANCE_COUNT', '001')
-    env_name = f"pyt-aigbb-{instance_count}"
+    env_name = f"pyt-az-ai-{instance_count}"
     location = os.getenv('AZURE_LOCATION', 'francecentral')
     resource_group_name = f"rg-{env_name}"
     solution.run_in(f"az group create --location {location} --name {resource_group_name}")

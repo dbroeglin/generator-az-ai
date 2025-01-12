@@ -4,7 +4,7 @@ import us from "underscore.string";
 import path from "path";
 
 const prompting = async function () {
-  this.log(yosay(`Welcome to the fine ${chalk.red("AI GBB")} generator v${this.props.generatorVersion}!`));
+  this.log(yosay(`Welcome to the fine ${chalk.red("Az AI")} generator v${this.props.generatorVersion}!`));
   const solutionBasename = path.basename(path.resolve(this.options.destination));
   const solutionName = us.titleize(us.humanize(solutionBasename));
   const prompts = [

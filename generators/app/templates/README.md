@@ -10,7 +10,7 @@ ToC: [**USER STORY**](#user-story) \| [**GETTING STARTED**](#getting-started)  \
 L100 level aplication stub for an AI copilot/agent.
 <% } else { -%>
 > [!TIP] 
-> **AI GBB Tip**: Document what your solution does here.
+> **Az AI Tip**: Document what your solution does here.
 <% } -%>
 
 ## Getting Started
@@ -34,7 +34,7 @@ It is possible to operate the fully local setup.
   - Optionally [Docker](https://www.docker.com/get-started/): `docker` 
 
 > [!TIP] 
-> **AI GBB Tip**: Document here how to quickly deploy the solution. Try to reduce this to `azd up` by
+> **Az AI Tip**: Document here how to quickly deploy the solution. Try to reduce this to `azd up` by
 > automating as much as possible. Have a look at `main.bicep` and `scripts` for examples of how to do
 > that
 
@@ -56,19 +56,19 @@ To deploy <%- solutionName %> just run:
 
 - TODO : Obervability
 > [!TIP] 
-> **AI GBB Tip**: Document how the solution is used and operated here.
+> **Az AI Tip**: Document how the solution is used and operated here.
 > Optionally, if the section is too long, create a `USER_MANUAL.md` file and
 > link to it from here.
 
 ### Architecture
 <% if (solutionLevel >= 300) { -%>
 > [!TIP] 
-> **AI GBB Tip**: Document the solution's architecture here.
+> **Az AI Tip**: Document the solution's architecture here.
 > Optionally, if the section is too long, create a `ARCHITECTURE.md` file and
 > link to it from here.
 
 > [!TIP] 
-> **AI GBB Tip**: For architecture diagrams, you can leverage the [Markdown text
+> **Az AI Tip**: For architecture diagrams, you can leverage the [Markdown text
 > diagramming capabilities](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams) available in GitHub. See example below.
 <% } %>
 ```mermaid
