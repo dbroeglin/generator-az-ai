@@ -505,7 +505,7 @@ module backendApp 'modules/app/container-apps.bicep' = {
     keyvaultIdentities: {
       'microsoft-provider-authentication-secret': {
         keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
-        identity: backendIdentity.outputs.identityId
+        identity: backendIdentity.outputs.resourceId
       }
     }
 <% } -%>
