@@ -8,7 +8,7 @@ set -e
 AZURE_APP_ID=$(
   az ad app show \
     --id "${AZURE_CLIENT_APP_ID:-00000000-0000-0000-0000-000000000000}" \
-    --query '[].id' \
+    --query id \
     -o tsv 2> /dev/null || true)
 
 if [ ! -z "$AZURE_APP_ID" ]; then
