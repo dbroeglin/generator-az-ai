@@ -6,7 +6,9 @@ class TestAZAiGeneratorL300Slow:
 
     @pytest.mark.slow
     @pytest.mark.usefixtures("depend_on_fast", "azd_env")
-    def test_zzz_deployment(self, solution):
+    def test_deployment(self, solution):
+        solution.run_in("azd up --no-prompt")
+
         with open(f"{solution}/src/frontend/app.py", "a") as f:
             f.write("st.write('Changed!')\n")
         with open(f"{solution}/src/backend/app.py", "a") as f:

@@ -70,12 +70,24 @@ def azd_env(request, solution):
     env_name = f"pyt-az-ai-{instance_count}"
     location = os.getenv('AZURE_LOCATION', 'francecentral')
     resource_group_name = f"rg-{env_name}"
-    solution.run_in(f"az group create --location {location} --name {resource_group_name}")
+    app_name = f"{env_name}-app"
+
+    # Create the test environment
     solution.run_in(f"azd env new {env_name}")
     solution.run_in(f"azd env set AZURE_RESOURCE_GROUP {resource_group_name}")
     solution.run_in(f"azd env set AZURE_LOCATION {location}")
 
-    solution.run_in("azd up --no-prompt")
+    # Cleanup the previous run in case it's still here from a previous run
+    solution.run_in((
+        f'app_id="$(az ad app list --display-name {app_name} --query "[0].appId" -o tsv)" && '
+        f'[ -n "$app_id" ] && az ad app delete --id "$app_id" || true'
+    ))
+    solution.run_in((
+        f'(test "$(az group exists --name {resource_group_name})" = "true" && '
+        f'azd down --purge --force --no-prompt) || true'
+    ))
+
+    solution.run_in(f"az group create --location {location} --name {resource_group_name}")
 
     yield env_name
 
