@@ -23,23 +23,10 @@ Local development:
 npm link
 ```
 
-Simple end to end testing: 
-```shell
-( 
-  rm -rf /tmp/foobar; yo az-ai /tmp/foobar && cd /tmp/foobar && \
-  AZURE_ENV_NAME=delete-me AZURE_LOCATION=francecentral azd up 
-  read
-  az ad app delete --id $(az ad app list --display-name "delete-me-app" --query '[].id'  -o tsv)
-  azd down --purge --force
-)
-```
 
-Cleanup only:
+Full testing:
 ```shell
-( 
-  cd /tmp/foobar && \
-  azd down --purge --force
-)
+uv run pytest --runslow
 ```
 
 Testing backend authentication:
