@@ -54,8 +54,8 @@ export default class extends Generator {
     );
 
     this.fs.copy(
-      this.templatePath("doc/TIPS_AND_TRICKS.md"),
-      this.destinationPath("doc/TIPS_AND_TRICKS.md")
+      this.templatePath("doc"),
+      this.destinationPath("doc")
     );
 
     this.fs.copyTpl(

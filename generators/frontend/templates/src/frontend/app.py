@@ -1,7 +1,9 @@
+import base64
+import json
 import logging
 import os
-import streamlit as st
 import requests
+import streamlit as st
 <% if (solutionLevel > 100) { -%>
 from azure.identity import DefaultAzureCredential
 <% } -%>
@@ -40,12 +42,29 @@ def get_principal_name():
     else:
         return "Anonymous"
 
+def get_principal_id():
+    result = st.context.headers.get('x-ms-client-principal-id')
+    if result:
+        return result
+    else:
+        return "default_user_id"
+
+def get_principal_display_name():
+    default_user_name = "Default User"
+    principal = st.context.headers.get('x-ms-client-principal')
+    if principal:
+        principal = json.loads(base64.b64decode(principal).decode('utf-8'))
+        claims = principal.get("claims", [])
+        return next((claim["val"] for claim in claims if claim["typ"] == "name"), default_user_name)
+    else:
+        return default_user_name
+
 load_dotenv_from_azd()
 
-st.write(get_principal_name())
+st.write(f"Welcome {get_principal_display_name()}!")
 st.markdown('<a href="/.auth/logout" target = "_self">Sign Out</a>', unsafe_allow_html=True)
 
 <% if (withBackend) { -%>
 st.write("Calling backend API...")
-st.write(call_backend(os.getenv('BACKEND_ENDPOINT', 'http://localhost:8000'), <%- solutionLevel > 100 ? "os.getenv('AZURE_CLIENT_APP_ID'), " : "" %>{"topic": "cookies"}).json())
+st.write(call_backend(os.getenv('BACKEND_ENDPOINT', 'http://localhost:8000'), <%- solutionLevel > 100 ? "os.getenv('AZURE_CLIENT_APP_ID'), " : "" %>{"topic": "cookies", "user_id": get_principal_id()}).json())
 <% } -%>

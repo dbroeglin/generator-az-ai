@@ -6,7 +6,6 @@ resource appIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-3
   location: location
 }
 
-
 /* -------------------------------------------------------------------------- */
 /*                                   OUTPUTS                                  */
 /* -------------------------------------------------------------------------- */

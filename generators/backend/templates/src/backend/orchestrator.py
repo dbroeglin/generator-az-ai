@@ -6,7 +6,7 @@ import datetime
 
 from semantic_kernel.kernel import Kernel
 from semantic_kernel.agents import AgentGroupChat
-from semantic_kernel.agents import ChatCompletionAgent
+# from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.agents.strategies.termination.termination_strategy import TerminationStrategy
 from semantic_kernel.agents.strategies import KernelFunctionSelectionStrategy
 from semantic_kernel.connectors.ai.open_ai import AzureChatPromptExecutionSettings
@@ -16,13 +16,13 @@ from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.core_plugins.time_plugin import TimePlugin
 from semantic_kernel.functions import KernelPlugin, KernelFunctionFromPrompt, KernelArguments
-
 from azure.ai.inference.aio import ChatCompletionsClient
 from azure.identity.aio import DefaultAzureCredential
-
 from opentelemetry.trace import get_tracer
 
 from pydantic import Field
+
+from temp_agent import CustomAgentBase
 
 class SemanticOrchestrator:
     def __init__(self):
@@ -49,6 +49,8 @@ class SemanticOrchestrator:
             plugins=[
                 KernelPlugin.from_object(plugin_instance=TimePlugin(), plugin_name="time")
             ])
+        
+        self.resourceGroup = os.getenv("AZURE_RESOURCE_GROUP")
 
     # --------------------------------------------
     # Create Agent Group Chat
@@ -83,7 +85,7 @@ class SemanticOrchestrator:
         """Speaker selection strategy for the agent group chat."""
         definitions = "\n".join([f"{agent.name}: {agent.description}" for agent in agents])
         selection_function = KernelFunctionFromPrompt(
-                function_name="selection",
+                function_name="SpeakerSelector",
                 prompt_execution_settings=AzureChatPromptExecutionSettings( temperature=0),
                 prompt=fr"""
                     You are the next speaker selector.
@@ -136,7 +138,7 @@ class SemanticOrchestrator:
             kernel: ClassVar[Kernel] = self.kernel
             
             termination_function: ClassVar[KernelFunctionFromPrompt] = KernelFunctionFromPrompt(
-                function_name="termination",
+                function_name="TerminationEvaluator",
                 prompt_execution_settings=AzureChatPromptExecutionSettings(temperature=0),
                 prompt=fr"""
                     You are a data extraction assistant.
@@ -170,7 +172,7 @@ class SemanticOrchestrator:
         return CompletionTerminationStrategy(agents=agents,
                                              maximum_iterations=maximum_iterations)
 
-    async def process_conversation(self, conversation_messages):
+    async def process_conversation(self, user_id, conversation_messages):
         agent_group_chat = self.create_agent_group_chat()
 
         # Load chat history - allow only assistant and user messages
@@ -185,18 +187,22 @@ class SemanticOrchestrator:
         await agent_group_chat.add_chat_messages(chat_history)
 
         tracer = get_tracer(__name__)
-        # Use session if as current span
+        
+        # UNIQUE SESSION ID is a must : get the name of the provider
         # Define current timestamp
         current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-        with tracer.start_as_current_span(current_time):
+        session_id = f"{self.resourceGroup}-{user_id}-{current_time}"
+        
+        with tracer.start_as_current_span(session_id):
             # async for _ in agent_group_chat.invoke():
                 #     pass
             async for a in agent_group_chat.invoke():
-                self.logger.info(f"Agent: {a}")
+                self.logger.info("Agent: %s", a)
 
         response = list(reversed([item async for item in agent_group_chat.get_chat_messages()]))
 
         # Writer response, as we run termination evaluation on Critic only, so expecting Critic response to be the last
+        # TO be reimplemented with a semantic function
         reply = response[-2].to_dict()
 
         return reply
@@ -206,10 +212,10 @@ class SemanticOrchestrator:
     # --------------------------------------------
     def create_agent(self, kernel, service_id, definition_file_path):
 
-        with open(definition_file_path, 'r') as file:
+        with open(definition_file_path, 'r', encoding='utf-8') as file:
             definition = yaml.safe_load(file)
-
-        return ChatCompletionAgent(
+            
+        return CustomAgentBase(
             service_id=service_id,
             kernel=kernel,
             name=definition['name'],
@@ -222,3 +228,20 @@ class SemanticOrchestrator:
             description=definition['description'],
             instructions=definition['instructions']
         )
+
+        # DO NOT DELETE. This is the original implementation of the create_agent method
+        # Once https://github.com/microsoft/semantic-kernel/issues/10174 is released, 
+        # we can switch to the below implementation
+        # return ChatCompletionAgent(
+        #     service_id=service_id,
+        #     kernel=kernel,
+        #     name=definition['name'],
+        #     execution_settings=AzureChatPromptExecutionSettings(
+        #         temperature=definition.get('temperature', 0.5),
+        #         function_choice_behavior=FunctionChoiceBehavior.Auto(
+        #             filters={"included_plugins": definition.get('included_plugins', [])}
+        #         )
+        #     ),
+        #     description=definition['description'],
+        #     instructions=definition['instructions']
+        # )
