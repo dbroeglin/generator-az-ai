@@ -28,9 +28,7 @@ in your shell like this:
 source <(azd env get-values | sed 's/^/export /')
 ```
 
-This works fine but it can lead to weird behavior when you switch environments 
-like that:
-
+This works but can lead to weird behavior when you switch environments like that:
 ```shell
 azd env select other-env-name
 
@@ -41,6 +39,25 @@ This would not run azd up in the `other-env-name` environment but would
 run it in the environment in which the `source` command occured because 
 `AZURE_ENV_NAME` still contains the name of the old environment.
  
+#### App Registration Client Secret
+
+The App registration client secret is generated once when the App Registration
+is created (usually during the initial `azd up` run) in `scripts/preprovision.sh`. It is then set as a secret in the keyvault during provisioning and deleted immediately after from the AZD environment in `scripts/postprovision.sh`.
+
+If for some reason you need to reset the value of the client app secret use the following commands:
+
+```shell
+AZURE_CLIENT_APP_ID=$(azd env get-value AZURE_CLIENT_APP_ID)
+azd env set AZURE_CLIENT_APP_SECRET "$(
+  az ad app credential reset \
+    --id $AZURE_CLIENT_APP_ID \
+    --display-name "client-secret" \
+    --query password \
+    --years 1 \
+    --output tsv
+  )"
+azd provision
+```
 
 ### Hooks
 
