@@ -63,7 +63,7 @@ yo az-ai  ../hello-ai-world \
   --solutionDescription 'AI Application chassis - best AI app practices optimized for Azure' \
   --solutionSlug hello-ai-world \
   --solutionVersion 0.1.0 \
-  --creatorName 'Az AI EMEA' \
+  --creatorName 'AI GBB EMEA' \
   --creatorEmail dominique.broeglin@microsoft.com \
   --withGitHub true \
   --withFrontend true \

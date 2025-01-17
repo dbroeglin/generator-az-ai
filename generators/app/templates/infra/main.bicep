@@ -448,7 +448,6 @@ module frontendApp 'modules/app/container-apps.bicep' = {
       BACKEND_ENDPOINT: backendApp.outputs.URL
 
 <% } -%>
-
       // Required for the frontend app to ask for a token for the backend app
       AZURE_CLIENT_APP_ID: authClientId
 
