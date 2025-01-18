@@ -42,6 +42,7 @@ def solution_dir(tmp_path_factory):
     shutils.rmtree(dir)
 
 def expect_prompt(child, prompt, default, control=None, answer=None):
+  __tracebackhide__ = True
   child.expect(re.escape(prompt)+".*\\([^\\)]+\\)")
   assert re.match(".*\\("+default+"\\).*", child.after, re.DOTALL)
 
