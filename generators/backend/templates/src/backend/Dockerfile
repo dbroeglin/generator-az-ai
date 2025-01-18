@@ -56,7 +56,9 @@ ENTRYPOINT ["/app/.venv/bin/uvicorn", "app:app", "--host", "0.0.0.0", "--port", 
 FROM python:<%- pythonVersion %>-slim AS base
 
 ENV APP_NAME=backend
+<% if (withPackage) { -%>
 ENV PACKAGE_NAME=<%= packageSlug %>
+<% } -%>
 
 ###############
 # Build stage #
@@ -79,8 +81,10 @@ WORKDIR /app
 ## Install depdencies first as they change less often
 
 COPY uv.lock pyproject.toml .python-version /app/
+<% if (withPackage) { -%>
 COPY src/${PACKAGE_NAME}/.python-version /app/src/${PACKAGE_NAME}/
 COPY src/${PACKAGE_NAME}/pyproject.toml /app/src/${PACKAGE_NAME}/
+<% } -%>
 COPY src/${APP_NAME}/pyproject.toml /app/src/${APP_NAME}/
 COPY src/${APP_NAME}/.python-version /app/src/${APP_NAME}/
 RUN uv sync \
@@ -92,7 +96,9 @@ RUN uv sync \
 
 ## Install the app last as it changes most often
 
+<% if (withPackage) { -%>
 COPY src/${PACKAGE_NAME} /app/src/${PACKAGE_NAME}
+<% } -%>
 COPY src/${APP_NAME} /app/src/${APP_NAME}
 RUN uv sync \
     --frozen \

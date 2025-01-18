@@ -17,9 +17,11 @@ dependencies = [
 members = ["src/*"]
 # exclude = ["src/excluded-package"]
 
+<% if (withPackage) { -%>
 [tool.uv.sources]
 <%= packageSlug %> = { workspace = true }
 
+<% } -%>
 [tool.pytest.ini_options]
 #addopts = "-ra --cov"
 addopts = "-ra"

@@ -12,9 +12,11 @@ dependencies = [
     "azure-ai-inference>=1.0.0b6",
 ]
 
+<% if (withPackage) { -%>
 # [project.scripts]
 # <%= packageSlug %> = "<%= packagePythonName %>:main"
 
+<% } -%>
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
