@@ -1,8 +1,6 @@
 import re
 import pytest
 import pexpect
-import sys
-import os
 import shutil as shutils
 
 l100_testdata = [
@@ -42,18 +40,21 @@ def solution_dir(tmp_path_factory):
     shutils.rmtree(dir)
 
 def expect_prompt(child, prompt, default, control=None, answer=None):
-  __tracebackhide__ = True
-  child.expect(re.escape(prompt)+".*\\([^\\)]+\\)")
-  assert re.match(".*\\("+default+"\\).*", child.after, re.DOTALL)
+  print(f"Expecting prompt: {prompt}...")
+  child.expect(f"{re.escape(prompt)}.*\\({default}\\)")
 
   if control:
+    #print(f"Sending control: {control}")
     child.sendcontrol(control)
   if answer:
+    #print(f"Sending answer: {answer}...")
     child.sendline(answer)
   else:
+    #print(f"Sending empty line...")
     child.sendline()
 
 def expect_l100(child, frontend=True, backend=True, github=True):
+  __tracebackhide__ = True
   expect_prompt(child, "What is the human readable name of your solution?", "Test Solution")
   expect_prompt(child, "What is the level of your solution?", "Use arrow keys")
   expect_prompt(child, "What is the description of your solution?", "Description of Test Solution")
@@ -70,6 +71,7 @@ def expect_l100(child, frontend=True, backend=True, github=True):
     expect_prompt(child, "Create the remote GitHub repository and push with GitHub CLI?", "y/N")
 
 def expect_l300(child, frontend=True, backend=True, package=True, github=True, ):
+  __tracebackhide__ = True
   expect_prompt(child, "What is the human readable name of your solution?", "Test Solution")
   expect_prompt(child, "What is the level of your solution?", "Use arrow keys", control="k")
   expect_prompt(child, "What is the description of your solution?", "Description of Test Solution")
@@ -90,7 +92,6 @@ def expect_l300(child, frontend=True, backend=True, package=True, github=True, )
     expect_prompt(child, "What is the GitHub repository you want to push to?", "[A-Za-z0-9-]+")
     expect_prompt(child, "Create the remote GitHub repository and push with GitHub CLI?", "y/N")
 
-
 @pytest.mark.parametrize("frontend,backend,github", l100_testdata)
 def test_prompts_l100(solution_dir, frontend, backend, github):
   child = pexpect.spawn(f"yo az-ai '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
@@ -104,7 +105,6 @@ def test_prompts_l100(solution_dir, frontend, backend, github):
   child.close()
   assert child.exitstatus == 0
 
-
 @pytest.mark.parametrize("frontend,backend,package,github", l300_testdata)
 def test_prompts_l300(solution_dir, frontend, backend, package, github):
   child = pexpect.spawn(f"yo az-ai '{solution_dir}'", timeout=20, encoding="utf-8", codec_errors="replace")
@@ -117,4 +117,3 @@ def test_prompts_l300(solution_dir, frontend, backend, package, github):
   output = child.after
   child.close()
   assert child.exitstatus == 0
-
