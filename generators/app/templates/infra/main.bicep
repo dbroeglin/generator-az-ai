@@ -422,15 +422,6 @@ module frontendIdentity './modules/app/identity.bicep' = {
   }
 }
 
-var keyvaultIdentities = withAuthentication
-  ? {
-      'microsoft-provider-authentication-secret': {
-        keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
-        identity: frontendIdentity.outputs.resourceId
-      }
-    }
-  : {}
-
 module frontendApp 'modules/app/container-apps.bicep' = {
   name: 'frontend-container-app'
   scope: resourceGroup()
@@ -457,7 +448,14 @@ module frontendApp 'modules/app/container-apps.bicep' = {
       // Required for managed identity
       AZURE_CLIENT_ID: frontendIdentity.outputs.clientId
     }
-    keyvaultIdentities: keyvaultIdentities
+    keyvaultIdentities: withAuthentication
+      ? {
+          'microsoft-provider-authentication-secret': {
+            keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
+            identity: frontendIdentity.outputs.resourceId
+          }
+        }
+      : {}
   }
 }
 
@@ -520,12 +518,14 @@ module backendApp 'modules/app/container-apps.bicep' = {
       AZURE_OPENAI_API_VERSION: azureOpenAiApiVersion
     }
 <% if (solutionLevel > 100) { -%>
-    keyvaultIdentities: {
-      'microsoft-provider-authentication-secret': {
-        keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
-        identity: backendIdentity.outputs.resourceId
-      }
-    }
+    keyvaultIdentities: withAuthentication
+      ? {
+          'microsoft-provider-authentication-secret': {
+            keyVaultUrl: '${keyVault.outputs.uri}secrets/${authClientSecretName}'
+            identity: backendIdentity.outputs.resourceId
+          }
+        }
+      : {}
 <% } -%>
   }
 }
