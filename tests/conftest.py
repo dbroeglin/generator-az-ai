@@ -74,6 +74,9 @@ def azd_env(request, solution):
 
     # Create the test environment
     solution.run_in(f"azd env new {env_name}")
+
+    # Use the default subscription from Azure CLI
+    solution.run_in('azd env set AZURE_SUBSCRIPTION_ID "$(az account show --query id -o tsv)"')
     solution.run_in(f"azd env set AZURE_RESOURCE_GROUP {resource_group_name}")
     solution.run_in(f"azd env set AZURE_LOCATION {location}")
 
