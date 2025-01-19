@@ -137,10 +137,10 @@ var _aiProjectName = take('${abbreviations.aiPortalProject}${environmentName}', 
 var _aiSearchServiceName = take('${abbreviations.searchSearchServices}${environmentName}', 260)
 
 <% if (withFrontend || withBackend) { -%>
-var _containerRegistryName = !empty(containerRegistryName)
+  var _containerRegistryName = !empty(containerRegistryName)
   ? containerRegistryName
-  : take('${abbreviations.containerRegistryRegistries}${take(alphaNumericEnvironmentName, 35)}${resourceToken}', 50)
-var _keyVaultName = take('${abbreviations.keyVaultVaults}${alphaNumericEnvironmentName}${resourceToken}', 24)
+  : take('${abbreviations.containerRegistryRegistries}${alphaNumericEnvironmentName}${resourceToken}', 50)
+var _keyVaultName = take('${abbreviations.keyVaultVaults}${alphaNumericEnvironmentName}-${resourceToken}', 24)
 var _containerAppsEnvironmentName = !empty(containerAppsEnvironmentName)
   ? containerAppsEnvironmentName
   : take('${abbreviations.appManagedEnvironments}${environmentName}', 60)
