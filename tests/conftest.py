@@ -27,7 +27,15 @@ class Solution:
         self.directory = directory
 
     def run_in(self, cmd, path=""):
-        return subprocess.run(f"cd {self.directory}/{path} && {cmd}", shell=True, check=True)
+        result =  subprocess.run(f"cd {self.directory}/{path} && {cmd}", shell=True, check=True)
+        if result.returncode == 0:
+            return result.stdout
+        else:
+            pytest.fail((
+                f"Command {cmd} (running in ./{path}) failed with code {result.returncode}!\n"
+                "---------------- Stdout:\n{result.stdout}\n\n"
+                "---------------- Stderr:\n{result.stderr}\n\n"))
+            return None
 
     def __str__(self):
         return str(self.directory)

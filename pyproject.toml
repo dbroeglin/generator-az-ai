@@ -11,6 +11,8 @@ dependencies = [
     "pexpect>=4.9.0",
     "pytest-dependency>=0.6.0",
     "pytest>=8.3.4",
+    "azure-identity>=1.19.0",
+    "azure-ai-inference>=1.0.0b6",
 ]
 
 [tool.pytest.ini_options]
