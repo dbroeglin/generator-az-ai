@@ -530,7 +530,7 @@ module backendApp 'modules/app/container-apps.bicep' = {
   }
 }
 <% if (solutionLevel > 100) { -%>
-module backendContainerAppAuth 'modules/app/container-apps-auth.bicep' = {
+module backendContainerAppAuth 'modules/app/container-apps-auth.bicep' = if (withAuthentication) {
   name: 'backend-container-app-auth-module'
   params: {
     name: backendApp.outputs.name
