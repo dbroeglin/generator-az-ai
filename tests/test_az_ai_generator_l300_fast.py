@@ -1,5 +1,4 @@
 import pytest
-import json
 
 from dev_container import DevContainer
 
@@ -8,13 +7,13 @@ from dev_container import DevContainer
 class TestAZAiGeneratorL300Fast(DevContainer):
     def test_docker_backend_build(self, solution):
         solution.run_in(
-            "docker build -f Dockerfile -t backend-pytest-l100-test ../..",
+            "docker build -f Dockerfile -t backend-pytest-l300-test ../..",
             path="src/backend",
         )
 
     def test_docker_frontend_build(self, solution):
         solution.run_in(
-            "docker build -f Dockerfile -t frontend-pytest-l100-test  ../..",
+            "docker build -f Dockerfile -t frontend-pytest-l300-test  ../..",
             path="src/frontend",
         )
 

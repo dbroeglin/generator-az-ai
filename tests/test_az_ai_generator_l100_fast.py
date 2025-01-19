@@ -1,5 +1,4 @@
 import pytest
-import json
 
 from dev_container import DevContainer
 
