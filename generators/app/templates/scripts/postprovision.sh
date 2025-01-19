@@ -5,14 +5,19 @@
 # see https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-extensibility
 
 <% if (withFrontend) { %>
-REDIRECT_URI="$SERVICE_FRONTEND_URL/.auth/login/aad/callback"
+if [[ "${WITH_AUTHENTICATION-}" =~ "true" ]]; then
+    printf "  \033[32m➜\033[0m Authentication is enabled updating login callback...\n"
 
-echo "Adding app registration redirect URI '$REDIRECT_URI'..."
-az ad app update \
-    --id "$AZURE_CLIENT_APP_ID" \
-    --web-redirect-uris "http://localhost:5801/.auth/login/aad/callback" "$REDIRECT_URI" \
-    --output table
+    redirect_uri="$SERVICE_FRONTEND_URL/.auth/login/aad/callback"
+
+    printf "   Adding app registration redirect URI '${redirect_uri}'..."
+    az ad app update \
+        --id "$AZURE_CLIENT_APP_ID" \
+        --web-redirect-uris "http://localhost:5801/.auth/login/aad/callback" "$redirect_uri" \
+        --output table
+
+    # Remove the secret from the environment after it has been set in the keyvault
+    azd env set AZURE_CLIENT_APP_SECRET ""
+fi
 <% } %>
 
-# Remove the secret from the environment after it has been set in the keyvault
-azd env set AZURE_CLIENT_APP_SECRET ""
