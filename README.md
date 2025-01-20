@@ -117,4 +117,8 @@ See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 ## Acknowledgements
 
   * Kudos to [Pamela Fox](https://github.com/pamelafox) and [James Casey](https://github.com/jamesc) for [Azure-Samples/openai-chat-app-entra-auth-builtin](https://github.com/Azure-Samples/openai-chat-app-entra-auth-builtin) from which we borrowed most of authentication & authorization setup.
-  * [Evgeny Minkevich](https://github.com/evmin) for his many contributions particularily to the the Bicep code.
+
+## Authors
+
+  * [Dominique Broeglin](https://github.com/dbroeglin)
+  * [Evgeny Minkevich](https://github.com/evmin)
