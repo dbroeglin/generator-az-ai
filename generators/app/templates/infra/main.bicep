@@ -1,5 +1,5 @@
 metadata name = '<%- solutionSlug %>'
-metadata description = 'Deploys the infrastructure for <%- solutionName %>'
+metadata description = 'Deploys the infrastructure for <%- solutionName.replace(/'/g, "\\'") %>'
 metadata author = '<%- authorContact %>'
 
 /* -------------------------------------------------------------------------- */
