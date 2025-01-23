@@ -65,7 +65,7 @@ export default class GitHubGenerator extends Generator {
     this.log(`🔧 Configuring git and GitHub...`)
 
     this.fs.copy(
-      this.templatePath(".gitignore"),
+      this.templatePath("dot-gitignore"),
       this.destinationPath(".gitignore")
     );
   }
