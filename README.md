@@ -13,6 +13,13 @@ npm install -g yo
 npm install -g generator-az-ai
 ```
 
+**NOTE!** If you have the generator installed already, you might also want to update the templates.
+
+```bash
+# optional
+npm upgrade -g generator-az-ai
+```
+
 Then generate your new project:
 ```bash
 yo az-ai awesome-ai-app
