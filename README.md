@@ -37,6 +37,7 @@ yo az-ai awesome-ai-app
 For local development link your souce directory with NPM:
 ```bash
 npm link
+npm install
 ```
 
 Full testing:
