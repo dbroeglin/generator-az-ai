@@ -53,11 +53,11 @@ yo az-ai  ../az-ai-kickstarter \
   --solutionSlug az-ai-kickstarter \
   --solutionVersion 0.1.0 \
   --creatorName 'AI GBB EMEA' \
-  --creatorEmail dominique.broeglin@microsoft.com \
+  --creatorEmail eminkevich@microsoft.com \
   --withGitHub true \
   --withFrontend true \
   --withBackend true \
-  --gitHubOrg dbroeglin \
+  --gitHubOrg evmin \
   --gitHubRepo az-ai-kickstarter \
   --withGitHubPush ''
 
