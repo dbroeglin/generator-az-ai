@@ -266,7 +266,7 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.15.0' = {
 // order of the model definitions is important
 var deployments = [
   {
-    name: 'gpt-4o-2024-08-06'
+    name: 'gpt-4o-2024-11-20'
     sku: {
       name: 'GlobalStandard'
       capacity: 50
@@ -274,7 +274,7 @@ var deployments = [
     model: {
       format: 'OpenAI'
       name: 'gpt-4o'
-      version: '2024-08-06'
+      version: '2024-11-20'
     }
     versionUpgradeOption: 'OnceCurrentVersionExpired'
   }
