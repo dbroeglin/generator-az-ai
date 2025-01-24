@@ -42,13 +42,15 @@ curl -i  $(azd env get-value SERVICE_BACKEND_URL)/echo \
   -d '{"Hello":"World!"}'
 ```
 
-Comparing generations:
+### Comparing generations
+
+Comparing full L100 generation:
 ```shell
-yo az-ai  ../hello-ai-world \
-  --solutionName 'Hello AI World' \
+yo az-ai  ../az-ai-kickstarter \
+  --solutionName 'Azure AI App Kickstarter' \
   --solutionLevel 100 \
   --solutionDescription 'AI Application chassis - best AI app practices optimized for Azure' \
-  --solutionSlug hello-ai-world \
+  --solutionSlug az-ai-kickstarter \
   --solutionVersion 0.1.0 \
   --creatorName 'AI GBB EMEA' \
   --creatorEmail dominique.broeglin@microsoft.com \
@@ -56,30 +58,14 @@ yo az-ai  ../hello-ai-world \
   --withFrontend true \
   --withBackend true \
   --gitHubOrg dbroeglin \
-  --gitHubRepo hello-ai-world \
+  --gitHubRepo az-ai-kickstarter \
   --withGitHubPush ''
 
 # Positive result: the last line in the command output should be "No changes to commit."
 ```
 
+Comparing full Level 300 generation:
 ```shell
-yo az-ai  ../az-ai-scaffolding-test-l100 \
-  --solutionName 'Az AI scaffolding tool test' \
-  --solutionLevel 100 \
-  --solutionDescription 'Solution generated with the Az AI Scaffolding tool test (l100)' \
-  --solutionSlug az-ai-scaffolding-test-l100 \
-  --solutionVersion 0.1.0 \
-  --creatorName 'Dominique Broeglin' \
-  --creatorEmail dominique.broeglin@microsoft.com \
-  --withFrontend true \
-  --withBackend true \
-  --withGitHub true \
-  --gitHubOrg dbroeglin \
-  --gitHubRepo az-ai-scaffolding-test-l100 \
-  --withGitHubPush false
-  
-# Positive result: the last line in the command output should be "No changes to commit."
-
 yo az-ai  ../az-ai-scaffolding-test-l300 \
   --solutionName 'Az AI scaffolding tool test' \
   --solutionLevel 300 \
@@ -99,7 +85,6 @@ yo az-ai  ../az-ai-scaffolding-test-l300 \
   --gitHubRepo az-ai-scaffolding-test-l300 \
   --withGitHubPush false
 
-  
 # Positive result: the last line in the command output should be "No changes to commit."
 ```
 

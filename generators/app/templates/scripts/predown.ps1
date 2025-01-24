@@ -10,7 +10,8 @@ if ($env:DEBUG -match '^(1|yes|true)$') {
 # see https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-extensibility
 
 if ($env:WITH_AUTHENTICATION -eq "true") {
-    Write-Host "  `e[32m➜`e[0m Authentication was enabled deleting app registration..."
+    Write-Host "    ➜ " -ForegroundColor Green -NoNewline
+    Write-Host "Authentication was enabled deleting app registration..."
 
     $clientAppId = if ($env:AZURE_CLIENT_APP_ID) {
         $env:AZURE_CLIENT_APP_ID

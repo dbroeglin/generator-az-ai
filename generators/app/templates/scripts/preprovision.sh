@@ -11,7 +11,7 @@ if [[ "${WITH_AUTHENTICATION-}" =~ "true" ]]; then
 
     if [ -z "$AZURE_AUTH_TENANT_ID" ]; then
         AZURE_AUTH_TENANT_ID=$(az account show --query tenantId -o tsv)
-        printf "    \033[3;33mAZURE_AUTH_TENANT_ID not provided: Default to $AZURE_AUTH_TENANT_ID from AZ CLI\033[0m"
+        printf "      \033[3;33mAZURE_AUTH_TENANT_ID not provided: Default to $AZURE_AUTH_TENANT_ID from AZ CLI\033[0m"
     fi
     azd env set AZURE_AUTH_TENANT_ID "$AZURE_AUTH_TENANT_ID"
 
@@ -20,9 +20,9 @@ if [[ "${WITH_AUTHENTICATION-}" =~ "true" ]]; then
     current_user_id=$(az ad user show --id "$current_user_upn" --query id --output tsv)
     AZURE_CLIENT_APP_ID=$(az ad app list --display-name "${app_name}" --query '[].appId' -o tsv)
 
-    printf "    Current user          : $current_user_upn"
-    printf "    Current tenant        : $AZURE_AUTH_TENANT_ID"
-    printf "    App Registration name : $app_name"
+    printf "      Current user          : $current_user_upn"
+    printf "      Current tenant        : $AZURE_AUTH_TENANT_ID"
+    printf "      App Registration name : $app_name"
 
     if [ -z "$AZURE_CLIENT_APP_ID" ];
     then
@@ -79,14 +79,14 @@ if [[ "${WITH_AUTHENTICATION-}" =~ "true" ]]; then
 
         azd env set AZURE_CLIENT_APP_SECRET "$AZURE_CLIENT_APP_SECRET"
 
-        printf "    App $app_name created with ID $AZURE_CLIENT_APP_ID and SP ID $SERVICE_PRINCIPAL_ID"
+        printf "      App $app_name created with ID $AZURE_CLIENT_APP_ID and SP ID $SERVICE_PRINCIPAL_ID"
     else
-        printf "    \033[3;33mApp '$AZURE_CLIENT_APP_ID' already exists, skipping creation\033[0m"
+        printf "      \033[3;33mApp '$AZURE_CLIENT_APP_ID' already exists, skipping creation\033[0m"
     fi
 
     azd env set AZURE_CLIENT_APP_ID "$AZURE_CLIENT_APP_ID"
 
-    printf "  \033[32m➜\033[0m Application registration ${app_name} (${AZURE_CLIENT_APP_ID}) has been created.\n"
+    printf "    \033[32m➜\033[0m Application registration ${app_name} (${AZURE_CLIENT_APP_ID}) done.\n"
 
     # Credits: inspired by https://gpiskas.com/posts/automate-creation-app-registration-azure-cli/#creating-and-modifying-the-app-registration
 fi
