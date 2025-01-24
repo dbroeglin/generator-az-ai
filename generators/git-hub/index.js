@@ -71,11 +71,10 @@ export default class GitHubGenerator extends Generator {
   }
 
   end() {
-    this.spawnSync("git", ["init"]);
+    this.spawnSync("git", ["init", "-b", "main"]);
     if (this.spawnSync("git", ["status", "--porcelain"], {
       stdio: 'pipe'
     }).stdout.length > 0) {
-      this.spawnSync("git", ["branch", "-m", "main"]);
       this.spawnSync("git", ["add", "."]);
       this.spawnSync("git", ["commit", "-m", "Initial commit"]);
       this.log(chalk.green("✅ Git repository initialized."));
