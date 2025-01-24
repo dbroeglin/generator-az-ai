@@ -4,7 +4,9 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/dbroeglin/generator-az-ai) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/dbroeglin/generator-az-ai)
 
-## Installation
+## Quick start
+
+### Generate you own fully functional project
 
 First, install [Yeoman](http://yeoman.io) and `generator-az-ai` using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
@@ -18,11 +20,17 @@ Then generate your new project:
 yo az-ai awesome-ai-app
 ```
 
-Local development:
+### Prefer to have a look at an already generated project?
+
+ - An example of a L100 project is available here: [evmin/az-ai-kickstarter](https://github.com/evmin/az-ai-kickstarter)
+ - An example of a L300 project is available at [dbroeglin/az-ai-scaffolding-test-l300](https://github.com/dbroeglin/az-ai-scaffolding-test-l300)
+
+## Development
+
+For local development link your souce directory with NPM:
 ```bash
 npm link
 ```
-
 
 Full testing:
 ```shell
