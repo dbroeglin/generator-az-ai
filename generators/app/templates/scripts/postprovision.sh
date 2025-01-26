@@ -10,7 +10,7 @@ if [[ "${WITH_AUTHENTICATION-}" =~ "true" ]]; then
 
     redirect_uri="$SERVICE_FRONTEND_URL/.auth/login/aad/callback"
 
-    printf "   Adding app registration redirect URI '${redirect_uri}'..."
+    printf "    Adding app registration redirect URI '${redirect_uri}'..."
     az ad app update \
         --id "$AZURE_CLIENT_APP_ID" \
         --web-redirect-uris "http://localhost:5801/.auth/login/aad/callback" "$redirect_uri" \

@@ -10,7 +10,7 @@ if ($env:WITH_AUTHENTICATION -match "true") {
 
     $redirect_uri = "$($env:SERVICE_FRONTEND_URL)/.auth/login/aad/callback"
 
-    Write-Host "   Adding app registration redirect URI '$redirect_uri'..."
+    Write-Host "    Adding app registration redirect URI '$redirect_uri'..."
     az ad app update `
         --id $env:AZURE_CLIENT_APP_ID `
         --web-redirect-uris "http://localhost:5801/.auth/login/aad/callback" $redirect_uri `

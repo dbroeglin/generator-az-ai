@@ -20,6 +20,7 @@ export default class extends Generator {
     });
     this.destinationRoot(this.options.destination);
     this.props = this.options;
+    this.props.generatorId = 'dbroeglin/generator-az-ai'
     this.props.generatorVersion = pkg.version;
     this.props.pythonVersion = '3.12';
 
