@@ -49,7 +49,7 @@ export default class GitHubGenerator extends Generator {
       : [];
       return this.prompt(prompts).then(answers => {
         this.parent.props = { ...this.props, ...answers };
-        this.parent.props.gitHubRepoUrl = `https://github.com/${this.props.gitHubOrg}/${this.props.gitHubRepo}`;
+        this.parent.props.gitHubRepoUrl = `https://github.com/${this.parent.props.gitHubOrg}/${this.parent.props.gitHubRepo}`;
       });
   };
 
