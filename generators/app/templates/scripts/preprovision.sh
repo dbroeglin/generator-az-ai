@@ -9,7 +9,7 @@ set -euo pipefail
 if [[ "${WITH_AUTHENTICATION-}" =~ "true" ]]; then
     printf "  \033[32m➜\033[0m Authentication is enabled creating app registration...\n"
 
-    if [ -z "$AZURE_AUTH_TENANT_ID" ]; then
+    if [ -z "${AZURE_AUTH_TENANT_ID-}" ]; then
         AZURE_AUTH_TENANT_ID=$(az account show --query tenantId -o tsv)
         printf "      \033[3;33mAZURE_AUTH_TENANT_ID not provided: Default to $AZURE_AUTH_TENANT_ID from AZ CLI\033[0m"
     fi
