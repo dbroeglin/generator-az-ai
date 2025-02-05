@@ -35,14 +35,11 @@ def call_backend(backend_endpoint, <%- solutionLevel > 100 ? "app_id, " : "" %>p
     response.raise_for_status()
     return response
 
-def get_principal_name():
-    result = st.context.headers.get('x-ms-client-principal-name')
-    if result:
-        return result
-    else:
-        return "Anonymous"
-
 def get_principal_id():
+    """
+    Get the principal ID of the current user from request headers provided by EasyAuth.
+    See https://learn.microsoft.com/en-us/azure/container-apps/authentication#access-user-claims-in-application-code for more information.
+    """
     result = st.context.headers.get('x-ms-client-principal-id')
     if result:
         return result
@@ -50,6 +47,10 @@ def get_principal_id():
         return "default_user_id"
 
 def get_principal_display_name():
+    """
+    Get the display name of the current user from the request headers provided by EasyAuth.
+    See https://learn.microsoft.com/en-us/azure/container-apps/authentication#access-user-claims-in-application-code for more information.
+    """
     default_user_name = "Default User"
     principal = st.context.headers.get('x-ms-client-principal')
     if principal:
@@ -61,10 +62,31 @@ def get_principal_display_name():
 
 load_dotenv_from_azd()
 
-st.write(f"Welcome {get_principal_display_name()}!")
-st.markdown('<a href="/.auth/logout" target = "_self">Sign Out</a>', unsafe_allow_html=True)
+st.sidebar.write(f"Welcome, {get_principal_display_name()}!")
+st.sidebar.markdown(
+    '<a href="/.auth/logout" target = "_self">Sign Out</a>', unsafe_allow_html=True
+)
 
 <% if (withBackend) { -%>
-st.write("Calling backend API...")
-st.write(call_backend(os.getenv('BACKEND_ENDPOINT', 'http://localhost:8000'), <%- solutionLevel > 100 ? "os.getenv('AZURE_CLIENT_APP_ID'), " : "" %>{"topic": "cookies", "user_id": get_principal_id()}).json())
+result = None
+with st.status("Agents are crafting a response...", expanded=True) as status:
+    try:
+        url = f'{os.getenv('BACKEND_ENDPOINT', 'http://localhost:8000')}/blog'
+        payload = {"topic": "cookies", "user_id": get_principal_id()}
+        headers = {}
+<% if (solutionLevel > 100) { -%>
+        if not (url.startswith('http://localhost') or url.startswith('http://127.0.0.1')):
+          token = DefaultAzureCredential().get_token(f'api://{app_id}/.default')
+          headers['Authorization'] = f"Bearer {token.token}"
+<% } -%>
+        with requests.post(url, json=payload, headers={}, stream=True) as response:
+            for line in response.iter_lines():
+                result = json.loads(line.decode('utf-8'))
+                status.write(result)
+        status.update(label="Backend call complete", state="complete", expanded=False)
+    except Exception as e:
+        status.update(
+            label=f"Backend call failed: {e}", state="complete", expanded=False
+        )
+st.markdown(result["content"])
 <% } -%>

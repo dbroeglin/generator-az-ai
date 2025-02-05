@@ -31,17 +31,12 @@ param secrets object = {}
 
 @description('External Ingress Allowed?')
 param externalIngressAllowed bool = true
-// param applicationInsightsName string
-
-// param azureOpenAIModelEndpoint string
-// param azureModelDeploymentName string
 
 // param cosmosDbEndpoint string
 // param cosmosDbName string
 // param cosmosDbContainer string
 
 param exists bool
-
 
 var keyvalueSecrets = [for secret in items(secrets): {
   name: secret.key
@@ -53,6 +48,22 @@ var keyvaultIdentitySecrets = [for secret in items(keyvaultIdentities): {
   keyVaultUrl: secret.value.keyVaultUrl
   identity: secret.value.identity
 }]
+
+var environment = [
+  for key in objectKeys(env): {
+    name: key
+    value: '${env[key]}'
+  }
+]
+
+var secret_refs = [
+  for key in objectKeys(secrets): {
+    name: key
+    secretRef: key
+  }
+]
+
+var environmentVariables = union(environment, secret_refs)
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2024-03-01' existing = { name: containerAppsEnvironmentName }
 
@@ -96,12 +107,7 @@ resource app 'Microsoft.App/containerApps@2024-08-02-preview' = {
         {
           image: fetchLatestImage.outputs.?containers[?0].?image ?? 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
           name: 'main'
-          env: [
-            for key in objectKeys(env): {
-              name: key
-              value: '${env[key]}'
-            }
-          ]
+          env: environmentVariables
           resources: {
             cpu: json('1.0')
             memory: '2.0Gi'

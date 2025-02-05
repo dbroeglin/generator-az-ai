@@ -102,6 +102,20 @@ azd provision
 > Optionally, if the section is too long, create a `USER_MANUAL.md` file and
 > link to it from here.
 
+### External Model
+
+If you have an external Azure OpenAI model already provisioned, you can reference it by setting environment variable prior callin `azd up`
+
+```sh
+export AOAI_ENDPOINT="https://<endpoint>.openai.azure.com"
+export AOAI_DEPLOYMENT_NAME="gpt-4o-2024-11-20"
+export AOAI_API_VERSION="2024-12-01-preview"
+export aoaikeysecret="key"
+```
+
+>[WARNING!] The `aoaikeysecret` is not set in azd .azure/<env>./.env file automatically.
+> In order to use it when running the model locally, either set it as env variable or add it to azd `.env` file.
+
 ### Architecture
 <% if (solutionLevel >= 300) { -%>
 > [!TIP] 
@@ -138,8 +152,18 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Responsible AI Guidelines
 
-This project follows below responsible AI guidelines and best practices, please review them before using this project:
+This project follows the below responsible AI guidelines and best practices, please review them before using this project:
 
 - [Microsoft Responsible AI Guidelines](https://www.microsoft.com/en-us/ai/responsible-ai)
 - [Responsible AI practices for Azure OpenAI models](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/overview)
 - [Safety evaluations transparency notes](https://learn.microsoft.com/en-us/azure/ai-studio/concepts/safety-evaluations-transparency-note)
+
+## Acknowledgements
+
+  * Kudos to [Pamela Fox](https://github.com/pamelafox) and [James Casey](https://github.com/jamesc) for [Azure-Samples/openai-chat-app-entra-auth-builtin](https://github.com/Azure-Samples/openai-chat-app-entra-auth-builtin) from which we borrowed most of authentication & authorization setup.
+  * Special thank you to [Michael Hofer](https://github.com/mhofer1976) for extensive testing and solving o1 compatibility
+
+## Authors
+
+  * [Dominique Broeglin](https://github.com/dbroeglin)
+  * [Evgeny Minkevich](https://github.com/evmin)

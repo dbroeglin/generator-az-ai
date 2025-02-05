@@ -33,6 +33,8 @@ RUN uv sync \
 
 COPY *.py /app/
 COPY agents /app/agents
+COPY patterns /app/patterns
+COPY utils /app/utils
 
 ###############
 # Final image #
