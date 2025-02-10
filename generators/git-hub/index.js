@@ -3,6 +3,20 @@ import Generator from "yeoman-generator";
 import chalk from "chalk";
 
 export default class GitHubGenerator extends Generator {
+  initializing () {
+    try {
+      this.spawnSync("git", ["--version"], { stdio : 'pipe' });
+    } catch (error) {
+      this.log(chalk.red(`Error: git is not installed. Please install git and try again.`));
+      process.exit(1);
+    }
+    try {
+      this.spawnSync("gh", ["--version"], { stdio : 'pipe' });
+    } catch (error) {
+      this.log(chalk.yellow(`⚠️  Warning: gh is not installed. If you plan on pushing to GitHub please install gh and try again.`));
+    }
+  }
+
   async prompting() {
     this.parent = this.options.parent;
     this.props = this.parent.props;

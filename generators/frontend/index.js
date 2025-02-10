@@ -2,6 +2,15 @@
 import Generator from "yeoman-generator";
 
 export default class FrontendGenerator extends Generator {
+  initializing () {
+    try {
+      this.spawnSync("uv", ["--version"], { stdio : 'pipe' });
+    } catch (error) {
+      this.log(`Error: uv is not installed. Please install uv and try again.`);
+      process.exit(1);
+    }
+  }
+
   async prompting() {
     this.parent = this.options.parent;
     this.props = this.parent.props;

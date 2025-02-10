@@ -41,6 +41,11 @@ export default class extends Generator {
     });
   }
 
+  initializing() {
+    // keep this method event if empty to make sure
+    // subgenerators are executed in proper order
+  }
+
   async prompting() {
     return prompting.call(this);
   }

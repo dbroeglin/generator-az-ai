@@ -3,6 +3,15 @@ import Generator from "yeoman-generator";
 import us from "underscore.string";
 
 export default class PackageGenerator extends Generator {
+  initializing () {
+    try {
+      this.spawnSync("uv", ["--version"], { stdio : 'pipe' });
+    } catch (error) {
+      this.log(`Error: uv is not installed. Please install uv and try again.`);
+      process.exit(1);
+    }
+  }
+
   async prompting() {
     this.parent = this.options.parent;
     this.props = this.parent.props;
