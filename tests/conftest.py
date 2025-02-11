@@ -85,11 +85,9 @@ def depend_on_fast(request):
 @pytest.fixture(scope="class")
 def azd_env(request, solution):
     if os.getenv('SOLUTION') is None:
-        env_name = solution.run_in("azd env get-value AZURE_ENV_NAME", capture=True).strip().decode('utf-8')
-
         instance_count = os.getenv('AZURE_INSTANCE_COUNT', '001')
         env_name = f"pyt-az-ai-{instance_count}"
-        location = os.getenv('AZURE_LOCATION', 'francecentral')
+        location = os.getenv('AZURE_LOCATION', 'switzerlandnorth')
         resource_group_name = f"rg-{env_name}"
         app_name = f"{env_name}-app"
 
