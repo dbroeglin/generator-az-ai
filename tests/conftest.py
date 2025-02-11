@@ -87,7 +87,7 @@ def azd_env(request, solution):
     if os.getenv('SOLUTION') is None:
         instance_count = os.getenv('AZURE_INSTANCE_COUNT', '001')
         env_name = f"pyt-az-ai-{instance_count}"
-        location = os.getenv('AZURE_LOCATION', 'switzerlandnorth')
+        location = os.getenv('AZURE_LOCATION', 'swedencentral')
         resource_group_name = f"rg-{env_name}"
         app_name = f"{env_name}-app"
 
